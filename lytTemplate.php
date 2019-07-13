@@ -23,10 +23,30 @@ SOFTWARE.
 
 ////////////////////////////////////////////////////////////////////////////////
 // includes
-require_once "lytConfig.php";
+require_once "zFile.php";
 
 ////////////////////////////////////////////////////////////////////////////////
+// Load in the page template file.
+function lytTemplateLoadPage()
+{
+   return zFileLoadText("lytTemplatePage.html", false);
+}
 
-print lytPageConfig($_SERVER, $_POST);
+////////////////////////////////////////////////////////////////////////////////
+// lytPageSet
+function lytPageSet($HtmlHead, $Title, $Menu, $ColL, $Content, $ColR, $Footer)
+{
+   $page = lytTemplateLoadPage();
+   
+   $page = str_replace("[HtmlHead]", $HtmlHead, $page);
+   $page = str_replace("[Title]",    $Title,    $page);
+   $page = str_replace("[Menu]",     $Menu,     $page);
+   $page = str_replace("[ColL]",     $ColL,     $page);
+   $page = str_replace("[Content]",  $Content,  $page);
+   $page = str_replace("[ColR]",     $ColR,     $page);
+   $page = str_replace("[Footer]",   $Footer,   $page);
+
+   return $page;
+}
 
 ?>

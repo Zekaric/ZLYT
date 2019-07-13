@@ -46,7 +46,7 @@ function zHtmlHead(...$content)
       $str .= $s;
    }
    
-   $str .= "</head>\n"
+   $str .= "</head>\n";
    
    return $str;
 }
@@ -112,16 +112,16 @@ function zHtmlForm($isGet, $command, ...$content)
 // Display a button
 function zHtmlFormInputButton($class, $nameStr, $valueStr)
 {
-   if ($class == "") { return "<input"                 . " type=button name=" . $nameStr . " value=\"" . $valueStr "\" />\n"; }
-                       return "<input class=" . $class . " type=button name=" . $nameStr . " value=\"" . $valueStr "\" />\n";
+   if ($class == "") { return "<input"                 . " type=button name=" . $nameStr . " value=\"" . $valueStr . "\" />\n"; }
+                       return "<input class=" . $class . " type=button name=" . $nameStr . " value=\"" . $valueStr . "\" />\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display the form submit button.
-function zHtmlFormInputButtonSubmit($class, $nameStr, $valueStr)
+function zHtmlFormInputButtonSubmit($class, $nameStr)
 {
-   if ($class == "") { return "<input"                 . " type=submit name=" . $nameStr . " value=\"" . $valueStr "\" />\n"; }
-                       return "<input class=" . $class . " type=submit name=" . $nameStr . " value=\"" . $valueStr "\" />\n";
+   if ($class == "") { return "<input"                 . " type=submit name=" . $nameStr . " />\n"; }
+                       return "<input class=" . $class . " type=submit name=" . $nameStr . " />\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -151,10 +151,24 @@ function zHtmlFormInputText($class, $nameStr, $valueStr, $size)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Display a link.
-function zHtmlLink($link, $content)
+// Display a password field.
+function zHtmlFormInputPassword($class, $nameStr, $valueStr, $size)
 {
-   return "<a href=\"" . $link . "\">" . $content . "</a>\n";
+   if ($size == "")
+   {
+      $size = "80";
+   }
+   
+   if ($class == "") { return "<input"                 . " type=password size=" . $size . " name=" . $nameStr . " value=\"" . $valueStr . "\" />\n"; }
+                       return "<input class=" . $class . " type=password size=" . $size . " name=" . $nameStr . " value=\"" . $valueStr . "\" />\n";
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Display a link.
+function zHtmlLink($class, $link, $content)
+{
+   if ($class == "") { return "<a"                 . " href=\"" . $link . "\">" . $content . "</a>\n"; }
+                       return "<a class=" . $class . " href=\"" . $link . "\">" . $content . "</a>\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -164,8 +178,8 @@ function zHtmlPara($class, ...$paraStrList)
    $str = "";
    foreach ($paraStrList as $paraStr)
    {
-      if ($class == "") { $str .= "<p>"                     . $paraStr . "</p>\n"; }
-      else              { $str .= "<p class=" . $class .">" . $paraStr . "</p>"\n; }
+      if ($class == "") { $str .= "<p>"                      . $paraStr . "</p>\n"; }
+      else              { $str .= "<p class=" . $class . ">" . $paraStr . "</p>\n"; }
    }
 
    return $str;

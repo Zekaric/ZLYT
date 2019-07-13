@@ -68,7 +68,7 @@ function zFileLoadText($fileName, $isLocking)
    $text = "";
    
    // Open the file.
-   $fp = zFileOpenStart($fileName, "r", $isLocking);
+   $fp = zFileConnect($fileName, "r", $isLocking);
    if (zFileOpenIsGood($fp))
    {
 	   return "zFileLoad: ERROR: Unable to open file '" . $fileName . "' for reading.";
@@ -87,7 +87,7 @@ function zFileLoadText($fileName, $isLocking)
    }
       
    // Close the file.
-   zFileOpenStop($fp);
+   zFileDisconnect($fp);
    
    // Return the file contents.
    return $text;
@@ -134,7 +134,7 @@ function zFileOpenIsGood($fp)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Open a file.
-function zFileOpenStart($file, $mode, $isLocking)
+function zFileConnect($file, $mode, $isLocking)
 {
    $fp = array();
 
@@ -143,9 +143,9 @@ function zFileOpenStart($file, $mode, $isLocking)
    $fp["lock"]       = "";
    $fp["file"]       = false;
 
-   if ($islocking))
+   if ($islocking)
    {
-      $fp["lock"] = zLockCreateFile($file)
+      $fp["lock"] = zLockCreateFile($file);
       if ($fp["lock"] == "")
       {
          return $fp;
@@ -170,7 +170,7 @@ function zFileOpenStart($file, $mode, $isLocking)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Close the open file.
-function zFileOpenStop($fp)
+function zFileDisconnect($fp)
 {
    if ($fp["file"] != false)
    {
@@ -189,7 +189,7 @@ function zFileOpenStop($fp)
 function zFileStoreText($fileName, $string, $isLocking)
 {
    // Open the file.
-   $fp = zFileOpenStart($fileName, "w", $isLocking);
+   $fp = zFileConnect($fileName, "w", $isLocking);
    if (!$fp)
    {
       return false; // "zFileStore: ERROR: Unable to open file '" . $fileName . "' for writing.";
@@ -199,7 +199,7 @@ function zFileStoreText($fileName, $string, $isLocking)
    fwrite($fp, $string);
    
    // Close the file.
-   zFileOpenStop($fp);
+   zFileDisconnect($fp);
 
    return true;
 }
@@ -209,7 +209,7 @@ function zFileStoreText($fileName, $string, $isLocking)
 function zFileStoreTextArray($fileName, $lineArray, $isLocking)
 {
    // Open the file.
-   $fp = zFileOpenStart($fileName, "w", $isLocking);
+   $fp = zFileConnect($fileName, "w", $isLocking);
    if (!$fp)
    {
       return false; // "zFileStore: ERROR: Unable to open file '" . $fileName . "' for writing.";
@@ -223,8 +223,9 @@ function zFileStoreTextArray($fileName, $lineArray, $isLocking)
    }
       
    // Close the file.
-   zFileOpenStop($fp);
+   zFileDisconnect($fp);
 
    return true;
 }
+
 ?>
