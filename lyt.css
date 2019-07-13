@@ -1,0 +1,72 @@
+/* MIT License ****************************************************************
+Copyright (c) 2015 Robbert de Groot
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+******************************************************************************/
+
+/* Reset everything to something known.*/
+p, body, table, td, form
+{
+   font-family:         arial,sans-serif;
+   font-size:           16px;
+   margin:              0%;
+   padding:             0%;
+   border:              none;
+   border-width:        0%;
+   border-collapse:     collapse;
+   outline-width:       0%;
+}
+
+body.lyt
+{
+   background-color:    white;
+}
+
+p.lytTitle
+{
+   font-size:           200%;
+   font-weight:         bold;
+   background-color:    white;
+   border-bottom:       5px solid;
+   border-color:        black;
+   margin:              10px;
+}
+p.lytSubTitle
+{
+   font-size:           125%;
+   font-weight:         bold;
+   margin:              10px;
+}
+p.lyt
+{
+   font-size:           100%;
+   margin:              10px;
+}
+
+table.lyt
+{
+   margin:              10px;
+}
+td.lyt
+{
+   padding-top:         1px;
+   padding-bottom:      1px;
+   padding-right:       3px;
+   vertical-align:      top;
+}

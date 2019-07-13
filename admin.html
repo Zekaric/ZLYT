@@ -1,0 +1,125 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>$title</title>
+  <link rel="stylesheet" href="candy.css" type="text/css" media="screen">
+  $candyLoginHeadContent
+  $captchaHeadContent
+ </head>
+ <body class=$bodyClass>
+
+  <p class=candyTitle>Admin CANDY</h1>
+
+  <p class=candy>
+  <table class=candy>
+   <tbody>
+    <tr>
+     <td valign=top>
+      <!-- Menu -->
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_DISPLAY_CONFIG>
+        <input type=submit value="Manage Site Configuration">
+       </form>
+      </p>
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_DISPLAY_CATEGORY_LIST>
+        <input type=submit value="Manage Post Categories">
+       </form>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_DISPLAY_POST_LIST>
+        <input type=submit value="Manage Posts">
+       </form>
+      </p>
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_DISPLAY_FILE_LIST>
+        <input type=submit value="Manage Files">
+       </form>
+       </p>
+       <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_DISPLAY_IMAGE_LIST>
+        <input type=submit value="Manage Images">
+       </form>
+      </p>
+     </td>
+     <td>
+      <!-- Form -->
+
+
+      <p class=candySubTitle>Post Categories</p>
+ 
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_CATEGORY_LIST>
+        <p class=candy>
+        Category&nbsp;Name:&nbsp;<input class=candy type=text size=80 name=$strCANDY_TAG_CATEGORY_NAME value="$strCATEGORY_NAME" />&nbsp;<input class=candy type=submit value="Add New Category" />
+        </p>
+       </form>
+      </p>
+      <p class=candy>$strCATEGORY_NAME</p>
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_CATEGORY_LIST>
+        <p class=candy><input class=candy type=submit name=$strCATEGORY_INDEX value=X />&nbsp;$strCATEGORY_NAME</p>
+       </form>
+      </p>
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_CATEGORY_LIST>
+        <p class=candy><input class=candy type=submit name=$strCATEGORY_INDEX value=X />&nbsp;$strCATEGORY_NAME</p>
+       </form>
+      </p>
+
+
+      <p class=candySubTitle>Post List</p>
+ 
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_POST_LIST>
+        <p class=candy><input class=candy type=submit value="Add New Post" /></p>
+       </form>
+      </p>
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_POST_LIST>
+        <p class=candy><input class=candy type=submit name=$strPOST_INDEX value=X />&nbsp;<input class=candy type=submit name=$strPOST_INDEX value=Edit />&nbsp;$strPOST_TITLE</br>%strPOST_DATE</p>
+       </form>
+      </p>
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_CATEGORY_LIST>
+        <p class=candy><input class=candy type=submit name=$strCATEGORY_INDEX value=X />&nbsp;$strCATEGORY_NAME</p>
+       </form>
+      </p>
+      <p class=candy>
+       <form action=_admin_.php method=post>
+        <input type=hidden name=$strCANDY_TAG_LOGIN_SESSION   value=$strLOGIN_SESSION>
+        <input type=hidden name=$strCANDY_TAG_ADMIN_OPERATION value=$strCANDY_TAG_ADMIN_CATEGORY_LIST>
+        <p class=candy><input class=candy type=submit name=$strCATEGORY_INDEX value=X />&nbsp;$strCATEGORY_NAME</p>
+       </form>
+      </p>
+
+
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  </p>   
+ </body>
+</html>
+ 
