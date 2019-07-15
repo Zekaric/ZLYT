@@ -21,22 +21,28 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+define("DEBUGGING_IS_ON", true);
+
 ////////////////////////////////////////////////////////////////////////////////
-// lytDebugPrint
-function lytDebugPrint($value)
+// Pring a debug statement.
+function zDebugPrint($value)
 {
-   print $value . "<br />\n";
+   if (DEBUGGING_IS_ON)
+   {
+      print "DEBUG: " . $value . "<br />\n";
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// lytDebugPrintArray
-function lytDebugPrintArray($data)
+// Print an array.
+function zDebugPrintArray($data)
 {
-   foreach($data as $key => $value)
+   if (DEBUGGING_IS_ON)
    {
-      lytDebugPrint($key);
-      lytDebugPrint("[" . $value . "]");
-      lytDebugPrint("");
+      foreach($data as $key => $value)
+      {
+         zDebugPrint($key . " : [" . $value . "]");
+      }
    }
 }
 

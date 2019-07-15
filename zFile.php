@@ -36,8 +36,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+define("FILE_DEBUGGING_IS_ON", false);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Include
+require_once "zDebug.php";
 require_once "zLock.php";
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +58,70 @@ function zDirIsExisting($dirName)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Open a file.
+function zFileConnect($file, $mode, $isLocking)
+{
+   $fp = array();
+
+   $fp["name"]       = $file;
+   $fp["isLocking"]  = $isLocking;
+   $fp["lock"]       = "";
+   $fp["file"]       = false;
+
+   if ($isLocking)
+   {
+      $fp["lock"] = zLockCreateFile($file);
+      if ($fp["lock"] == "")
+      {
+         if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fp);
+         return $fp;
+      }
+   }
+
+   $fp["file"] = fopen($file, $mode);
+   
+   // File open failed.
+   if (!$fp["file"])
+   {
+      if ($isLocking)
+      {
+         // Clean up
+         zcUnLock($fp["lock"]);
+      }
+      $fp["file"] = false;
+   }
+   
+   if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fp);
+   return $fp;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Check to see if the file open succeeded.
+function zFileConnectIsGood($fp)
+{
+   return ($fp["file"] != false);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Close the open file.
+function zFileDisconnect($fp)
+{
+   if ($fp["file"] != false)
+   {
+      fclose($fp["file"]);
+
+      if ($fp["isLocking"] &&
+          $fp["lock"] != "")
+      {
+         zcUnLock($fp["lock"]);
+      }
+      
+      $fp["lock"] = "";
+      $fp["file"] = false;
+   }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Check to see if a file exists.
 function zFileIsExisting($fileName)
 {
@@ -69,7 +136,7 @@ function zFileLoadText($fileName, $isLocking)
    
    // Open the file.
    $fp = zFileConnect($fileName, "r", $isLocking);
-   if (zFileOpenIsGood($fp))
+   if (!zFileConnectIsGood($fp))
    {
 	   return "zFileLoad: ERROR: Unable to open file '" . $fileName . "' for reading.";
    }
@@ -77,7 +144,7 @@ function zFileLoadText($fileName, $isLocking)
    // Read in the file contents.
    while (true)
    {
-      $line = fgets($fp);
+      $line = fgets($fp["file"]);
       if ($line == false)
       {
          break;
@@ -100,8 +167,8 @@ function zFileLoadTextArray($fileName, $isLocking)
    $lineArray = array();
    
    // Open the file.
-   $fp = zFileOpen($fileName, "r", $isLocking);
-   if (!$fp)
+   $fp = zFileConnect($fileName, "r", $isLocking);
+   if (!zFileConnectIsGood($fp))
    {
 	   return "zFileLoad: ERROR: Unable to open file '" . $fileName . "' for reading.";
    }
@@ -109,7 +176,7 @@ function zFileLoadTextArray($fileName, $isLocking)
    // Read in the file contents.
    while (true)
    {
-      $line = fgets($fp);
+      $line = fgets($fp["file"]);
       if ($line == false)
       {
          break;
@@ -126,77 +193,18 @@ function zFileLoadTextArray($fileName, $isLocking)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Check to see if the file open succeeded.
-function zFileOpenIsGood($fp)
-{
-   return ($fp["file"] != false);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Open a file.
-function zFileConnect($file, $mode, $isLocking)
-{
-   $fp = array();
-
-   $fp["name"]       = $file;
-   $fp["isLocking"]  = $isLocking;
-   $fp["lock"]       = "";
-   $fp["file"]       = false;
-
-   if ($islocking)
-   {
-      $fp["lock"] = zLockCreateFile($file);
-      if ($fp["lock"] == "")
-      {
-         return $fp;
-      }
-   }
-
-   $fp["file"] = fopen($file, $mode);
-   
-   // File open failed.
-   if (!$fp["file"])
-   {
-      if ($isLocking)
-      {
-         // Clean up
-         zcUnLock($fp["lock"]);
-      }
-      $fp["file"] = false;
-   }
-   
-   return $fp;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Close the open file.
-function zFileDisconnect($fp)
-{
-   if ($fp["file"] != false)
-   {
-      fclose($fp);
-
-      if ($fp["isLocking"] &&
-          $fp["lock"] != "")
-      {
-         zcUnLock($fp["lock"]);
-      }
-   }
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // Store the file contents from a single string.
 function zFileStoreText($fileName, $string, $isLocking)
 {
    // Open the file.
    $fp = zFileConnect($fileName, "w", $isLocking);
-   if (!$fp)
+   if (!zFileConnectIsGood($fp))
    {
       return false; // "zFileStore: ERROR: Unable to open file '" . $fileName . "' for writing.";
    }
 
    // Write the file contents.
-   fwrite($fp, $string);
+   fwrite($fp["file"], $string);
    
    // Close the file.
    zFileDisconnect($fp);
@@ -210,7 +218,7 @@ function zFileStoreTextArray($fileName, $lineArray, $isLocking)
 {
    // Open the file.
    $fp = zFileConnect($fileName, "w", $isLocking);
-   if (!$fp)
+   if (!zFileConnectIsGood($fp))
    {
       return false; // "zFileStore: ERROR: Unable to open file '" . $fileName . "' for writing.";
    }
@@ -219,7 +227,7 @@ function zFileStoreTextArray($fileName, $lineArray, $isLocking)
    $lineCount = count($lineArray);
    for ($index = 0; $index < $lineCount; $index++)
    {
-      fwrite($fp, $lineArray[$index] . "\n");
+      fwrite($fp["file"], $lineArray[$index] . "\n");
    }
       
    // Close the file.

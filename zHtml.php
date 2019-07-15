@@ -26,7 +26,7 @@ SOFTWARE.
 function zHtmlDoc($header, $body)
 {
    return "".
-      "<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\n" .
+      "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" .
       "<html>\n" .
       $header . 
       $body . 
@@ -95,7 +95,7 @@ function zHtmlBody($class, ...$content)
 // Form creation
 function zHtmlForm($isGet, $command, ...$content)
 {
-   $str = "<form action=\"" . $command . "\" ";
+   $str = "<form action=\"" . $command . "\" method=";
       
    if ($isGet) { $str .= "GET  >\n"; }
    else        { $str .= "POST >\n"; }
@@ -106,6 +106,8 @@ function zHtmlForm($isGet, $command, ...$content)
    }
    
    $str .= "</form>\n";
+   
+   return $str;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,10 +120,10 @@ function zHtmlFormInputButton($class, $nameStr, $valueStr)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display the form submit button.
-function zHtmlFormInputButtonSubmit($class, $nameStr)
+function zHtmlFormInputButtonSubmit($class)
 {
-   if ($class == "") { return "<input"                 . " type=submit name=" . $nameStr . " />\n"; }
-                       return "<input class=" . $class . " type=submit name=" . $nameStr . " />\n";
+   if ($class == "") { return "<input"                 . " type=submit />\n"; }
+                       return "<input class=" . $class . " type=submit />\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -139,26 +141,16 @@ function zHtmlFormInputCheck($class, $nameStr, $valueStr)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display a text field.
-function zHtmlFormInputText($class, $nameStr, $valueStr, $size)
+function zHtmlFormInputText($class, $nameStr, $valueStr="", $size="80")
 {
-   if ($size == "")
-   {
-      $size = "80";
-   }
-   
    if ($class == "") { return "<input"                 . " type=text size=" . $size . " name=" . $nameStr . " value=\"" . $valueStr . "\" />\n"; }
                        return "<input class=" . $class . " type=text size=" . $size . " name=" . $nameStr . " value=\"" . $valueStr . "\" />\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display a password field.
-function zHtmlFormInputPassword($class, $nameStr, $valueStr, $size)
+function zHtmlFormInputPassword($class, $nameStr, $valueStr, $size="80")
 {
-   if ($size == "")
-   {
-      $size = "80";
-   }
-   
    if ($class == "") { return "<input"                 . " type=password size=" . $size . " name=" . $nameStr . " value=\"" . $valueStr . "\" />\n"; }
                        return "<input class=" . $class . " type=password size=" . $size . " name=" . $nameStr . " value=\"" . $valueStr . "\" />\n";
 }
@@ -173,13 +165,14 @@ function zHtmlLink($class, $link, $content)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display a bunch of paragraphs.
-function zHtmlPara($class, ...$paraStrList)
+function zHtmlPara($class, ...$content)
 {
    $str = "";
-   foreach ($paraStrList as $paraStr)
+   
+   foreach ($content as $s)
    {
-      if ($class == "") { $str .= "<p>"                      . $paraStr . "</p>\n"; }
-      else              { $str .= "<p class=" . $class . ">" . $paraStr . "</p>\n"; }
+      if ($class == "") { $str .= "<p>"                      . $s . "</p>\n"; }
+      else              { $str .= "<p class=" . $class . ">" . $s . "</p>\n"; }
    }
 
    return $str;
@@ -187,7 +180,7 @@ function zHtmlPara($class, ...$paraStrList)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display a header
-function zHtmlParaHeader($class, $level, $str)
+function zHtmlParaHeader($class, $level, $content)
 {
    if ($class == "") { return "<h" . $level . ">"                      . $content . "</h" . $level . ">\n"; }
                        return "<h" . $level . " class=" . $class . ">" . $content . "</h" . $level . ">\n";
@@ -204,19 +197,19 @@ function zHtmlStrNonBreaking($str)
 // Display a table.
 function zHtmlTable($class, $content)
 {
-   if ($class == "") { return "<table" .               . "><tbody>\n" . $content . "</tbody></table>\n"; }
+   if ($class == "") { return "<table"                 . "><tbody>\n" . $content . "</tbody></table>\n"; }
                        return "<table class=" . $class . "><tbody>\n" . $content . "</tbody></table>\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // The rows of the table.
-function zHtmlTableRow($class, ...$rowList)
+function zHtmlTableRow($class, ...$content)
 {
    $str = "";
-   foreach ($rowList as $row)
+   foreach ($content as $s)
    {
-      if ($class == "") { $str .= "<tr>"                      . $row . "</tr>\n"; }
-      else              { $str .= "<tr class=" . $class . ">" . $row . "</tr>\n"; }                          
+      if ($class == "") { $str .= "<tr>\n"                      . $s . "</tr>\n"; }
+      else              { $str .= "<tr class=" . $class . ">\n" . $s . "</tr>\n"; }                          
    }
 
    return $str;
@@ -224,14 +217,14 @@ function zHtmlTableRow($class, ...$rowList)
 
 ////////////////////////////////////////////////////////////////////////////////
 // The columns of the table.
-function zHtmlTableCol($class, ...$colList)
+function zHtmlTableCol($class, ...$content)
 {
    $str = "";
 
-   foreach ($colList as $col)
+   foreach ($content as $s)
    {
-      if ($class == "") { $str .= "<td>"                      . $col. "</td>\n"; }
-      else              { $str .= "<td class=" . $class . ">" . $col. "</td>\n"; }
+      if ($class == "") { $str .= "<td>"                      . $s. "</td>\n"; }
+      else              { $str .= "<td class=" . $class . ">" . $s. "</td>\n"; }
    }
 
    return $str;
@@ -239,15 +232,15 @@ function zHtmlTableCol($class, ...$colList)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display a bullet list.
-function zHtmlListBullet($class, ...$list)
+function zHtmlListBullet($class, ...$content)
 {
    if ($class == "") { $str = "<ul>\n"; }
    else              { $str = "<ul class=" . $class . ">\n"; }
    
-   foreach ($list as $item)
+   foreach ($content as $s)
    {
-      if ($class == "") { $str .= "<li>"                      . $item . "</li>\n"; }
-      else              { $str .= "<li class=" . $class . ">" . $item . "</li>\n"; }
+      if ($class == "") { $str .= "<li>"                      . $s . "</li>\n"; }
+      else              { $str .= "<li class=" . $class . ">" . $s . "</li>\n"; }
    }
    
    $str .= "</ul>\n";
@@ -255,15 +248,15 @@ function zHtmlListBullet($class, ...$list)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Display a numbered list.
-function zHtmlListBullet($class, ...$list)
+function zHtmlListNumber($class, ...$content)
 {
    if ($class == "") { $str = "<ol>\n"; }
    else              { $str = "<ol class=" . $class . ">\n"; }
    
-   foreach ($list as $item)
+   foreach ($content as $s)
    {
-      if ($class == "") { $str .= "<li>"                      . $item . "</li>\n"; }
-      else              { $str .= "<li class=" . $class . ">" . $item . "</li>\n"; }
+      if ($class == "") { $str .= "<li>"                      . $s . "</li>\n"; }
+      else              { $str .= "<li class=" . $class . ">" . $s . "</li>\n"; }
    }
    
    $str .= "</ol>\n";

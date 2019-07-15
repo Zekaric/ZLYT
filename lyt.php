@@ -1,5 +1,16 @@
+<?php
+/* lyt.php ***********7********************************************************
+
+L.Y.T. : Log Your Thoughts
+
+Author: Robbert de Groot
+
+Description:
+
+******************************************************************************/
+
 /* MIT License ****************************************************************
-Copyright (c) 2015 Robbert de Groot
+Copyright (c) 2019 Robbert de Groot
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,29 +31,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-/* Reset everything to something known.*/
-h1
+////////////////////////////////////////////////////////////////////////////////
+// includes
+require_once "zDebug.php";
+
+require_once "lyt_Constant.php";
+require_once "lyt_Config.php";
+
+// If the site isn't configured yet then set it up.
+if (!lytIsConfigured())
 {
-   font-size:           2rem;
-   font-weight:         bold;
-   border-bottom:       0.1rem solid;
-   margin:              0.5rem;
+   require_once "lytAdmin.php";
+   
+   print lytAdminPage();
+   exit(0);
 }
 
-h2
+// What are we wanting to do.
+$op = lytGetValue("op");
+
+if ($op = "login")
 {
-   font-size:           1.5rem;
-   font-weight:         bold;
-   margin:              0.5rem;
+   require_once "lytLogin.php";
+   
+   print lytLoginPage();
+   exit(0);
 }
 
-p
-{
-   font-size:           1rem;
-   margin:              0.5rem;
-}
+// Default screen.
 
-form
-{
-   margin:              0.5rem;
-}
+//print lytTopicPage();
+zDebugPrint("TODO: Topic display.");
+exit(0);
+
+?>

@@ -38,13 +38,15 @@ function lytPageSet($HtmlHead, $Title, $Menu, $ColL, $Content, $ColR, $Footer)
 {
    $page = lytTemplateLoadPage();
    
-   $page = str_replace("[HtmlHead]", $HtmlHead, $page);
-   $page = str_replace("[Title]",    $Title,    $page);
-   $page = str_replace("[Menu]",     $Menu,     $page);
-   $page = str_replace("[ColL]",     $ColL,     $page);
-   $page = str_replace("[Content]",  $Content,  $page);
-   $page = str_replace("[ColR]",     $ColR,     $page);
-   $page = str_replace("[Footer]",   $Footer,   $page);
+   $page = str_replace("[HtmlHead]",    $HtmlHead,                            $page);
+   $page = str_replace("[Title]",       $Title,                               $page);
+   $page = str_replace("[Menu]",        $Menu,                                $page);
+   $page = str_replace("[ColL]",        $ColL,                                $page);
+   $page = str_replace("[Content]",     $Content,                             $page);
+   $page = str_replace("[ColR]",        $ColR,                                $page);
+   $page = str_replace("[Footer]",      $Footer,                              $page);
+   $page = str_replace("[UrlSafe]",     $config[LYT_TAG_SITE_ADDRESS_SECURE], $page);
+   $page = str_replace("[ImageFolder]", $config[LYT_TAG_FOLDER_IMAGE],        $page);
 
    return $page;
 }

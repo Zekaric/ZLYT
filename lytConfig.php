@@ -23,27 +23,48 @@ SOFTWARE.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Include
-require_once "lytConstant.php";
-require_once "lytDebug.php";
-require_once "lytLogin.php";
-require_once "lytTemplate.php";
+require_once "zDebug.php";
 require_once "zFile.php";
 require_once "zHtml.php";
 
-////////////////////////////////////////////////////////////////////////////////
-// variables
-$config = false;
+require_once "lyt_Constant.php";
+require_once "lyt_Config.php"
+
+require_once "lytLogin.php";
+require_once "lytTemplate.php";
 
 ////////////////////////////////////////////////////////////////////////////////
 // API
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
+// Get a URL value.
+function lytGetValue($key)
+{
+   // Check the _GET (in URL) if there is a value...
+   // If not, check the _POST if there is value...
+   // If not then "" 
+   return 
+      (isset($_GET[$key]) ? 
+         $_GET[$key]      : 
+         (isset($_POST["op"]) ? $_POST["op"] : ""));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Check to see if the LYT system is configured yet.
+function lytIsConfigured()
+{
+   global $lytConfig;
+   
+   return $lytConfig[LYT_TAG_IS_CONFIGURED];
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // If the image folder is randomized then this function renames the folder to 
 // a new randomized name.
 function lytConfigChangeImageFolder()
 {
-   global $config;
+   global $lytConfig;
    
    if (!lytConfigIsFolderImageRandom())
    {
@@ -56,323 +77,117 @@ function lytConfigChangeImageFolder()
    
    // Rename the image folder.
    rename($imageFolderOld, $imageFolderNew);
-   $config[LYT_TAG_FOLDER_IMAGE] = $imageFolderNew;
+   $lytConfig[LYT_TAG_FOLDER_IMAGE] = $imageFolderNew;
    
    // Update the config file.
    lytConfigStore();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Create the configuration file.
-function lytConfigCreate($post)
-{
-   global $config;
-
-   // Get the form data.
-   $config[LYT_TAG_SITE_NAME]              = $post[LYT_TAG_SITE_NAME];
-   $config[LYT_TAG_SITE_ADDRESS_PUBLIC]    = $post[LYT_TAG_SITE_ADDRESS_PUBLIC];
-   $config[LYT_TAG_SITE_ADDRESS_SECURE]    = $post[LYT_TAG_SITE_ADDRESS_SECURE];
-   $config[LYT_TAG_COMPANY_NAME]           = $post[LYT_TAG_COMPANY_NAME];
-   $config[LYT_TAG_OWNER_NAME]             = $post[LYT_TAG_OWNER_NAME];
-   $config[LYT_TAG_OWNER_ALIAS]            = $post[LYT_TAG_OWNER_ALIAS];
-   $config[LYT_TAG_FOLDER_FILE]            = "lytFile";
-   $config[LYT_TAG_FOLDER_IMAGE]           = "lytImage";
-   
-   // Store the config file.
-   lytConfigStore();
-   
-   // Make the folders
-   mkdir($config[LYT_TAG_FOLDER_FILE]);
-   mkdir($config[LYT_TAG_FOLDER_IMAGE]);
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // lytConfigGet
 function lytConfigGetCompanyName()
 {
-   global $config;
-   return $config[LYT_TAG_COMPANY_NAME];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_COMPANY_NAME];
 }
 
 function lytConfigGetFolderFile()
 {
-   global $config;
-   return $config[LYT_TAG_FOLDER_FILE];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_FOLDER_FILE];
 }
 
 function lytConfigGetFolderImage()
 {
-   global $config;
-   return $config[LYT_TAG_FOLDER_IMAGE];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_FOLDER_IMAGE];
 }   
 
 function lytConfigGetLoginKey()
 {
-   global $config;
-   return $config[LYT_TAG_LOGIN_KEY];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_LOGIN_KEY];
 }
 
 function lytConfigGetOwnerAlias()
 {
-   global $config;
-   return $config[LYT_TAG_OWNER_ALIAS];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_OWNER_ALIAS];
 }
 
 function lytConfigGetOwnerName()
 {
-   global $config;
-   return $config[LYT_TAG_OWNER_NAME];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_OWNER_NAME];
 }
 
 function lytConfigGetOwnerPassword()
 {
-   global $config;
-   return $config[LYT_TAG_OWNER_PASSWORD];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_OWNER_PASSWORD];
 }
 
 function lytConfigGetSiteAddressPublic()
 {
-   global $config;
-   return $config[LYT_TAG_SITE_ADDRESS_PUBLIC];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_SITE_ADDRESS_PUBLIC];
 }
 
 function lytConfigGetSiteAddressSecure()
 {
-   global $config;
-   return $config[LYT_TAG_SITE_ADDRESS_SECURE];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_SITE_ADDRESS_SECURE];
 }
 
 function lytConfigGetSiteName()
 {
-   global $config;
-   return $config[LYT_TAG_SITE_NAME];
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_SITE_NAME];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // lytIs
 function lytConfigIsUsingGoogleCaptcha()
 {
-   global $config;
-   return $config[LYT_TAG_IS_USING_GOOGLE_CAPTCHA];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// lytConfigLoad
-function lytConfigLoad()
-{
-   global $config;
-
-   if (!zFileIsExisting(LYT_CONFIG_FILE_NAME))
-   {
-      return false;
-   }
-
-   // Load in the values.
-   $strLYT_CONFIG_FILE_NAME = LYT_CONFIG_FILE_NAME;
-   require_once($strLYT_CONFIG_FILE_NAME);
-
-   return true;
+   global $lytConfig;
+   return $lytConfig[LYT_TAG_IS_USING_GOOGLE_CAPTCHA];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // lytSet
 function lytConfigSetOwnerPassword($password)
 {
-   global $config;
-   $config[LYT_TAG_OWNER_PASSWORD] = $password;
+   global $lytConfig;
+   $lytConfig[LYT_TAG_OWNER_PASSWORD] = $password;
 }
 
 function lytConfigSetLoginKey($key)
 {
-   global $config;
-   $config[LYT_TAG_LOGIN_KEY] = $key;
+   global $lytConfig;
+   $lytConfig[LYT_TAG_LOGIN_KEY] = $key;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // lytConfigStore
 function lytConfigStore()
 {
-   global $config;
+   global $lytConfig;
    
-   $configFileLines = sprintf("<?php\n" .
-      "   \$config[LYT_TAG_COMPANY_NAME             ] = '%s';\n" .
-      "   \$config[LYT_TAG_FOLDER_FILE              ] = '%s';\n" .
-      "   \$config[LYT_TAG_FOLDER_IMAGE             ] = '%s';\n" .
-      "   \$config[LYT_TAG_GOOGLE_CREDENTIAL        ] = '%s';\n" .
-      "   \$config[LYT_TAG_GOOGLE_ID                ] = '%s';\n" .
-      "   \$config[LYT_TAG_GOOGLE_SECRET            ] = '%s';\n" . 
-      "   \$config[LYT_TAG_IS_USING_GOOGLE_CAPTCHA  ] = '%s';\n" .
-      "   \$config[LYT_TAG_LOGIN_KEY                ] = '%s';\n" .
-      "   \$config[LYT_TAG_OWNER_ALIAS              ] = '%s';\n" .
-      "   \$config[LYT_TAG_OWNER_NAME               ] = '%s';\n" .
-      "   \$config[LYT_TAG_OWNER_PASSWORD           ] = '%s';\n" .
-      "   \$config[LYT_TAG_SITE_ADDRESS_PUBLIC      ] = '%s';\n" .
-      "   \$config[LYT_TAG_SITE_ADDRESS_SECURE      ] = '%s';\n" .
-      "   \$config[LYT_TAG_SITE_NAME                ] = '%s';\n" .
-      "?>\n"
-      ,
-      $config[LYT_TAG_COMPANY_NAME            ],
-      $config[LYT_TAG_FOLDER_FILE             ],
-      $config[LYT_TAG_FOLDER_IMAGE            ],
-      $config[LYT_TAG_GOOGLE_CREDENTIAL       ],
-      $config[LYT_TAG_GOOGLE_ID               ],
-      $config[LYT_TAG_GOOGLE_SECRET           ],
-      $config[LYT_TAG_IS_USING_GOOGLE_CAPTCHA ],
-      $config[LYT_TAG_LOGIN_KEY               ],
-      $config[LYT_TAG_OWNER_ALIAS             ],
-      $config[LYT_TAG_OWNER_NAME              ],
-      $config[LYT_TAG_OWNER_PASSWORD          ],
-      $config[LYT_TAG_SITE_ADDRESS_PUBLIC     ],
-      $config[LYT_TAG_SITE_ADDRESS_SECURE     ], 
-      $config[LYT_TAG_SITE_NAME               ]
-   );
+   $lytConfigFileContent = "" . 
+      "<?php\n" .
+      "   \$lytConfig[LYT_TAG_COMPANY_NAME             ] = '" . $lytConfig[LYT_TAG_COMPANY_NAME       ] . "';\n" .
+      "   \$lytConfig[LYT_TAG_FOLDER_FILE              ] = '" . $lytConfig[LYT_TAG_FOLDER_FILE        ] . "';\n" .
+      "   \$lytConfig[LYT_TAG_FOLDER_IMAGE             ] = '" . $lytConfig[LYT_TAG_FOLDER_IMAGE       ] . "';\n" .
+      "   \$lytConfig[LYT_TAG_LOGIN_KEY                ] = '" . $lytConfig[LYT_TAG_LOGIN_KEY          ] . "';\n" .
+      "   \$lytConfig[LYT_TAG_OWNER_ALIAS              ] = '" . $lytConfig[LYT_TAG_OWNER_ALIAS        ] . "';\n" .
+      "   \$lytConfig[LYT_TAG_OWNER_NAME               ] = '" . $lytConfig[LYT_TAG_OWNER_NAME         ] . "';\n" .
+      "   \$lytConfig[LYT_TAG_OWNER_PASSWORD           ] = '" . $lytConfig[LYT_TAG_OWNER_PASSWORD     ] . "';\n" .
+      "   \$lytConfig[LYT_TAG_SITE_ADDRESS_PUBLIC      ] = '" . $lytConfig[LYT_TAG_SITE_ADDRESS_PUBLIC] . "';\n" .
+      "   \$lytConfig[LYT_TAG_SITE_ADDRESS_SECURE      ] = '" . $lytConfig[LYT_TAG_SITE_ADDRESS_SECURE] . "';\n" .
+      "   \$lytConfig[LYT_TAG_SITE_NAME                ] = '" . $lytConfig[LYT_TAG_SITE_NAME          ] . "';\n" .
+      "?>\n";
    
-   lytFileStoreString(LYT_CONFIG_FILE_NAME, $configFileLines);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Display
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// Display a form for creating the LYT site.
-function lytConfigContentGetForm()
-{
-   return "" .
-      zHtmlParaHeader("", "1", 
-         "Create a LYT Web Site") .
-      zHtmlPara("", 
-         "LYT: L)og Y)our T)houghts",
-
-         "LYT is a simple content managment system that is aimed at hobbiests and small businesses " .
-         "than it is for large companies.  Its goal is to be simple. ",
-
-         "All the following fields can be later changed by editing the \"" . LYT_CONFIG_FILE_NAME .
-         "\" file that will be in the same folder as this _create_.html file. ",
-         
-         "If you try to \"Configure\" when there already exists a \"" . LYT_CONFIG_FILE_NAME . "\", " .
-         "all following attempts after the first attempt will fail.  You will need to rename or ">
-         "delete the \"" . LYT_CONFIG_FILE_NAME . "\" file first if you want to use this page again. ") .
-      zHtmlParaHeader("", "2", 
-         "Configuration") .
-      zHtmlForm(false, "_create_.php", 
-         zHtmlTable("", 
-            zHtmlTableRow("", 
-               zHtmlTableCol("",
-                  zHtmlStrNonBreaking("WebSite Name:"),
-                  zHtmlFormInputCheck("", LYT_TAG_SITE_NAME, ""),
-                  "WebSite name is the name you give your website."),
-               zHtmlTableCol("",
-                  zHtmlStrNonBreaking("WebSite Address Public:"),
-                  zHtmlFormInputCheck("", LYT_TAG_SITE_ADDRESS_PUBLIC, "http://"),
-                  "The address of the website that is insecure.  Include \"http://\""),
-               zHtmlTableCol("",
-                  zHtmlStrNonBreaking("WebSite Address Secure:"),
-                  zHtmlFormInputCheck("", LYT_TAG_SITE_ADDRESS_SECURE, "https://"),
-                  "The address of the website that is secure.  Include \"https://\""),
-               zHtmlTableCol("",
-                  "Company:",
-                  zHtmlFormInputCheck("", LYT_TAG_COMPANY_NAME, ""),
-                  "Your company name if applicable."),
-               zHtmlTableCol("",
-                  "Name:",
-                  zHtmlFormInputCheck("", LYT_TAG_OWNER_NAME, ""),
-                  "Your name or website maintainer's name."),
-               zHtmlTableCol("",
-                  "Alias:",
-                  zHtmlFormInputCheck("", LYT_TAG_OWNER_ALIAS, ""),
-                  "Your alias or website maintainer's alias."),
-               zHtmlTableCol("",
-                  "",
-                  zHtmlFormInputButtonSubmit("", "", "Configure"),
-                  ""))));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Display the results of the creation.
-function lytConfigContentGetResult()
-{
-   return "" .
-      zHtmlParaTitle("", "1", "Create a LYT Web Site") .
-      zHtmlPara(
-         LYT_CONFIG_FILE_NAME . " file created. ",
-         
-         zHtmlLink(lytLoginGetAddress(), "Login"));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Inform that there already exists a configuration.
-function lytConfigContentGetMessageConfigAlreadyExists()
-{
-   return "" .
-      zHtmlParaHeader("", "1", "Create a LYT Web Site") .
-      zHtmlPara(
-         LYT_CONFIG_FILE_NAME . " file already exists.  Please delete or rename the file before trying to create again. ",
-         
-         zHtmlLink(lytLoginGetAddress(), "Login"));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// lytConfigContentGetMessageConfigIsMissing
-function lytConfigContentGetMessageConfigIsMissing()
-{
-   print 
-      zHtmlParaTitle("lyt Config File Missing") .  
-      zHtmlPara(
-         "Please create the file first. ",
-         
-         zHtmlLink("_create_.php", "Create"));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// lytConfigContentGetMessage
-function lytConfigDebugPrint()
-{
-   global $config;
-   lytDebugPrintArray($config);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Page
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// Display the config page.
-function lytPageConfig($server, $post)
-{
-   $content = "";
-   
-   // Config file already exists.
-   if      (lytConfigLoad())
-   {
-      // Display warning
-      $content .= lytConfigContentGetMessageConfigAlreadyExists();
-   }
-   // There's a post, create the config file.
-   else if ($server['REQUEST_METHOD'] == 'POST')
-   {
-      lytConfigCreate($post);
-      $content .= lytConfigContentGetResult();
-   }      
-   // Display the config form.
-   else
-   {
-      $content .= lytConfigContentGetForm();
-   }
-
-   // Create the page content.
-   $page = lytPageSet(
-      "",
-      "Create LYT",
-      "",
-      "",
-      $content,
-      "",
-      "");
-   
-   // Send the page to the client.
-   return $page;
+   zFileStoreText(LYT_CONFIG_FILE_NAME, $lytConfigFileContent);
 }
 
 ?>
