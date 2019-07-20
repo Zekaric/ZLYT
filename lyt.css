@@ -21,28 +21,92 @@ SOFTWARE.
 ******************************************************************************/
 
 /* Reset everything to something known.*/
-h1
-{
-   font-size:           2rem;
-   font-weight:         bold;
-   border-bottom:       0.1rem solid;
-   margin:              0.5rem;
-}
-
-h2
+h1.lytPost
 {
    font-size:           1.5rem;
    font-weight:         bold;
-   margin:              0.5rem;
+   padding:             0.2rem;
+}
+
+h2.lytPost
+{
+   font-size:           1.0rem;
+   background-color:    black;
+   color:               white;
+   padding:             0.2rem;
+}
+
+h2.lytPostRight
+{
+   font-size:           1.0rem;
+   text-align:          right;
+   background-color:    black;
+   color:               white;
+   padding:             0.2rem;
 }
 
 p
 {
    font-size:           1rem;
-   margin:              0.5rem;
+}
+
+p.lytMenu
+{
+   font-size:           1.25rem;
+   color:               white;
+}
+
+p.lytFooter
+{
+   color:               white;
 }
 
 form
 {
    margin:              0.5rem;
 }
+
+a.lytMenu
+{
+   color:               white;
+   text-decoration:     none;
+}
+
+a.lytTitle
+{
+   text-decoration:     none;
+}
+
+table
+{
+   width:               100%;
+}
+
+td.lytColumnL, td.lytColumnR 
+{
+   width:               15%;
+   background-color:    #eee;
+   padding:             0.25rem;
+   vertical-align:      top;
+}
+
+td.lytColumn
+{
+   width:               70%;
+   padding:             1.0rem;
+}
+
+td.lytMenu
+{
+   text-align:          center;
+   background-color:    black;
+   padding:             0.25rem;
+}
+
+td.lytFooter
+{
+   text-align:          center;
+   background-color:    black;
+   padding:             0.25rem;
+}
+

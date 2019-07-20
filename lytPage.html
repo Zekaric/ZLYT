@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="style_reset.css">
+  <link rel="stylesheet" type="text/css" href="lyt.css">
+  <Title>[Title]</Title>
+<!--[HtmlHead]-->
+ </head>
+ <body>
+  <table>
+   <tr>
+    <td colspan=3>
+<!--title-->
+<!--lytImage will be globally changed to the random folder when the site is deployed.
+    Use lytImage when designing.-->
+<a class="lytTitle" href="[UrlSafe]"><img src="lytImage/title.gif" alt="[Title]" title="[Title]"/></a>
+    </td>
+   </tr>
+   <tr>
+    <td class="lytMenu" colspan=3>
+     <p class="lytMenu">
+<!--[MenuTemplate{]--><a class="lytMenu" href="[MenuLink]">[MenuTitle]</a><!--[}MenuTemplate]-->
+     </p>
+    </td>
+   </tr>
+   
+   <tr>
+    <td class="lytColumnL">
+<!--left   column-->
+[ColL]
+    </td>
+    
+    <td class="lytColumn">
+<!--center column-->
+<!--[PostTemplate{]-->
+<table>
+ <tr><td class="lytPostTitle" colspan=2><h1 class="lytPost">[PostTitle]</h1></td></tr>
+ <tr><td><h2 class="lytPost">[PostAuthor]</h2></td> <td><h2 class="lytPostRight">[PostDate]</h2></td></tr>
+ <tr><td>[PostBody]</td></tr>
+</table>
+<!--[}PostTemplate]-->
+    </td>
+    
+    <td class="lytColumnR">
+<!--right  column-->
+[ColR]
+    </td>
+   </tr>
+
+   <tr>
+    <td class="lytFooter" colspan=3>
+<!--Footer-->
+<p class="lytFooter">[Footer]</p>
+    </td>
+   </tr>
+   <tr>
+    <td colspan=3>
+     <p><center>Website powered by Zekaric:LYT</center></p>
+    </td>
+   </tr>
+  </table>
+ </body>
+</html>
