@@ -39,10 +39,12 @@ function zDebugPrintArray($data)
 {
    if (DEBUGGING_IS_ON)
    {
+      zDebugPrint("array[] {");
       foreach($data as $key => $value)
       {
-         zDebugPrint($key . " : [" . $value . "]");
+         zDebugPrint("   ". $key . " : [" . $value . "]");
       }
+      zDebugPrint("}");
    }
 }
 

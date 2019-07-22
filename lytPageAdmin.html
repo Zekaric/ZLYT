@@ -1,55 +1,35 @@
 ﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
  <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" type="text/css" href="[urlSafe]/style_reset.css">
-  <link rel="stylesheet" type="text/css" href="[urlSafe]/lyt.css">
-  <Title>[Title]</Title>
-[HtmlHead]
+  <link rel="stylesheet" type="text/css" href="style_reset.css">
+  <link rel="stylesheet" type="text/css" href="lyt_Admin.css">
+  <Title>LYT Admin</Title>
  </head>
- <body>
-  <table>
-   <tr>
-    <td colspan=3>
-<!--title-->
-<a href="[UrlSafe]"><img src="[ImageFolder]/title.gif" alt="[Title]" title="[Title]"/></a>
-    </td>
-   </tr>
-   <tr>
-    <td colspan=3>
-<!--title menu-->
-[Menu]
-    </td>
-   </tr>
-   
-   <tr>
-    <td>
-<!--left   column-->
-[ColL]
-    </td>
-    
-    <td>
-<!--center column-->
-[Content]
-    </td>
-    
-    <td>
-<!--right  column-->
-[ColR]
-    </td>
-   </tr>
 
-   <tr>
-    <td colspan=3>
-<!--Footer-->
-[Footer]
-    </td>
-   </tr>
-   <tr>
-    <td colspan=3>
-     <p><center>Website powered by Zekaric:LYT</center></p>
-    </td>
-   </tr>
-  </table>
+ <body>
+
+  <h1>LYT Admin</h1>
+
+  <form action="lyt.php" method=post>
+   <input type=hidden name=op value=admin />
+
+   <table>
+    <tr><td colspan=2><h2>Admin</h2></td></tr>                                              
+    <tr><td>Company:</td>        <td><input type=text       size=80 name=AdminCompany  value="[AdminCompany]" /></td></tr>                                                         
+    <tr><td>Name:</td>           <td><input type=text       size=80 name=AdminName     value="[AdminName]"    /></td></tr>                                                         
+    <tr><td>Login:</td>          <td><input type=text       size=80 name=AdminLogin    value="[AdminLogin]"   /></td></tr>            
+    <tr><td>Password:</td>       <td><input type=password   size=80 name=AdminPassword value="[AdminPassword]"/></td></tr>   
+
+    <tr><td colspan=2><h2>Site</h2></td></tr>   
+    <tr><td>Name:</td>           <td><input type=text       size=80 name=SiteName      value="[SiteName]"     /></td></tr>         
+    <tr><td>Address:</td>        <td><input type=text       size=80 name=SiteUrl       value="[SiteUrl]"      /></td></tr>
+    <tr><td>Address Secure:</td> <td><input type=text       size=80 name=SideUrlSafe   value="[SiteUrlSafe]"  /></td></tr>
+
+    <tr><td><input type=submit value="Apply"</td></tr>
+   </table>
+
+  </form>
  </body>
 </html>

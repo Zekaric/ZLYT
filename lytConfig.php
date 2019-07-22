@@ -28,27 +28,11 @@ require_once "zFile.php";
 require_once "zHtml.php";
 
 require_once "lyt_Constant.php";
-require_once "lyt_Config.php"
-
-require_once "lytLogin.php";
-require_once "lytTemplate.php";
+require_once "lyt_Config.php";
 
 ////////////////////////////////////////////////////////////////////////////////
 // API
 ////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// Get a URL value.
-function lytGetValue($key)
-{
-   // Check the _GET (in URL) if there is a value...
-   // If not, check the _POST if there is value...
-   // If not then "" 
-   return 
-      (isset($_GET[$key]) ? 
-         $_GET[$key]      : 
-         (isset($_POST["op"]) ? $_POST["op"] : ""));
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Check to see if the LYT system is configured yet.
@@ -84,90 +68,6 @@ function lytConfigChangeImageFolder()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// lytConfigGet
-function lytConfigGetCompanyName()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_COMPANY_NAME];
-}
-
-function lytConfigGetFolderFile()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_FOLDER_FILE];
-}
-
-function lytConfigGetFolderImage()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_FOLDER_IMAGE];
-}   
-
-function lytConfigGetLoginKey()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_LOGIN_KEY];
-}
-
-function lytConfigGetOwnerAlias()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_OWNER_ALIAS];
-}
-
-function lytConfigGetOwnerName()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_OWNER_NAME];
-}
-
-function lytConfigGetOwnerPassword()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_OWNER_PASSWORD];
-}
-
-function lytConfigGetSiteAddressPublic()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_SITE_ADDRESS_PUBLIC];
-}
-
-function lytConfigGetSiteAddressSecure()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_SITE_ADDRESS_SECURE];
-}
-
-function lytConfigGetSiteName()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_SITE_NAME];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// lytIs
-function lytConfigIsUsingGoogleCaptcha()
-{
-   global $lytConfig;
-   return $lytConfig[LYT_TAG_IS_USING_GOOGLE_CAPTCHA];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// lytSet
-function lytConfigSetOwnerPassword($password)
-{
-   global $lytConfig;
-   $lytConfig[LYT_TAG_OWNER_PASSWORD] = $password;
-}
-
-function lytConfigSetLoginKey($key)
-{
-   global $lytConfig;
-   $lytConfig[LYT_TAG_LOGIN_KEY] = $key;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // lytConfigStore
 function lytConfigStore()
 {
@@ -175,16 +75,17 @@ function lytConfigStore()
    
    $lytConfigFileContent = "" . 
       "<?php\n" .
-      "   \$lytConfig[LYT_TAG_COMPANY_NAME             ] = '" . $lytConfig[LYT_TAG_COMPANY_NAME       ] . "';\n" .
-      "   \$lytConfig[LYT_TAG_FOLDER_FILE              ] = '" . $lytConfig[LYT_TAG_FOLDER_FILE        ] . "';\n" .
-      "   \$lytConfig[LYT_TAG_FOLDER_IMAGE             ] = '" . $lytConfig[LYT_TAG_FOLDER_IMAGE       ] . "';\n" .
-      "   \$lytConfig[LYT_TAG_LOGIN_KEY                ] = '" . $lytConfig[LYT_TAG_LOGIN_KEY          ] . "';\n" .
-      "   \$lytConfig[LYT_TAG_OWNER_ALIAS              ] = '" . $lytConfig[LYT_TAG_OWNER_ALIAS        ] . "';\n" .
-      "   \$lytConfig[LYT_TAG_OWNER_NAME               ] = '" . $lytConfig[LYT_TAG_OWNER_NAME         ] . "';\n" .
-      "   \$lytConfig[LYT_TAG_OWNER_PASSWORD           ] = '" . $lytConfig[LYT_TAG_OWNER_PASSWORD     ] . "';\n" .
-      "   \$lytConfig[LYT_TAG_SITE_ADDRESS_PUBLIC      ] = '" . $lytConfig[LYT_TAG_SITE_ADDRESS_PUBLIC] . "';\n" .
-      "   \$lytConfig[LYT_TAG_SITE_ADDRESS_SECURE      ] = '" . $lytConfig[LYT_TAG_SITE_ADDRESS_SECURE] . "';\n" .
-      "   \$lytConfig[LYT_TAG_SITE_NAME                ] = '" . $lytConfig[LYT_TAG_SITE_NAME          ] . "';\n" .
+      "\$lytConfig = array();\n\n".
+      "\$lytConfig[LYT_TAG_IS_CONFIGURED  ] = true;\n\n".
+      "\$lytConfig[LYT_TAG_FOLDER_FILE    ] = '" . $lytConfig[LYT_TAG_FOLDER_FILE      ] . "';\n" .
+      "\$lytConfig[LYT_TAG_FOLDER_IMAGE   ] = '" . $lytConfig[LYT_TAG_FOLDER_IMAGE     ] . "';\n\n" .
+      "\$lytConfig[LYT_TAG_ADMIN_COMPANY  ] = '" . $lytConfig[LYT_TAG_ADMIN_COMPANY    ] . "';\n" .
+      "\$lytConfig[LYT_TAG_ADMIN_LOGIN    ] = '" . $lytConfig[LYT_TAG_ADMIN_LOGIN      ] . "';\n" .
+      "\$lytConfig[LYT_TAG_ADMIN_NAME     ] = '" . $lytConfig[LYT_TAG_ADMIN_NAME       ] . "';\n" .
+      "\$lytConfig[LYT_TAG_ADMIN_PASSWORD ] = '" . $lytConfig[LYT_TAG_ADMIN_PASSWORD   ] . "';\n" .
+      "\$lytConfig[LYT_TAG_SITE_NAME      ] = '" . $lytConfig[LYT_TAG_SITE_NAME        ] . "';\n" .
+      "\$lytConfig[LYT_TAG_SITE_URL       ] = '" . $lytConfig[LYT_TAG_SITE_URL         ] . "';\n" .
+      "\$lytConfig[LYT_TAG_SITE_URL_SECURE] = '" . $lytConfig[LYT_TAG_SITE_URL_SECURE  ] . "';\n\n" .
       "?>\n";
    
    zFileStoreText(LYT_CONFIG_FILE_NAME, $lytConfigFileContent);

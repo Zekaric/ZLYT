@@ -31,37 +31,55 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // includes
 require_once "zDebug.php";
 
 require_once "lyt_Constant.php";
 require_once "lyt_Config.php";
 
-// If the site isn't configured yet then set it up.
-if (!lytIsConfigured())
+require_once "lytAdmin.php";
+require_once "lytConfig.php";
+//require_once "lytLogin.php";
+
+///////////////////////////////////////////////////////////////////////////////
+// Get a URL value.
+function lytGetValue($key)
 {
-   require_once "lytAdmin.php";
-   
-   print lytAdminPage();
-   exit(0);
+   // Check the _GET (in URL) if there is a value...
+   // If not, check the _POST if there is value...
+   // If not then "" 
+   return 
+      (isset($_GET[$key]) ? 
+         $_GET[$key]      : 
+         (isset($_POST["op"]) ? $_POST["op"] : ""));
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// The main page for the program.
 
 // What are we wanting to do.
 $op = lytGetValue("op");
 
-if ($op = "login")
+// Admin page
+if      (!lytIsConfigured() ||
+         $op == "admin")
 {
-   require_once "lytLogin.php";
-   
-   print lytLoginPage();
+   print lytAdminPage();
    exit(0);
+}
+// Login page
+else if ($op == "login")
+{
+   zDebugPrint("Todo");
+//   print lytLoginPage();
+//   exit(0);
 }
 
 // Default screen.
 
-//print lytTopicPage();
 zDebugPrint("TODO: Topic display.");
+//print lytTopicPage();
 exit(0);
 
 ?>

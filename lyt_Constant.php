@@ -23,38 +23,19 @@ SOFTWARE.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants
-define("LYT_CONFIG_FILE_NAME",               "lyt_Config.php");
-define("LYT_TAG_IS_CONFIGURED",              "lytIsConfigured");
-define("LYT_TAG_ADMIN_OP",                   "lytAdminOp");
-define("LYT_TAG_ADMIN_OP_CONFIG_UPDATE",     "lytAdminOpConfigUpdate");
-define("LYT_TAG_ADMIN_PAGE",                 "lytAdminPage");
-define("LYT_TAG_ADMIN_PAGE_CATEGORY_LIST",   "lytAdminPageCategoryList");
-define("LYT_TAG_ADMIN_PAGE_CONFIG",          "lytAdminPageConfig");
-define("LYT_TAG_ADMIN_PAGE_POST",            "lytAdminPagePost");
-define("LYT_TAG_ADMIN_PAGE_POST_LIST",       "lytAdminPagePostList");
-define("LYT_TAG_ADMIN_PAGE_FILE_LIST",       "lytAdminPageFileList");
-define("LYT_TAG_ADMIN_PAGE_IMAGE_LIST",      "lytAdminPageImageList");
-define("LYT_TAG_ADMIN_CATEGORY_LIST",        "lytAdminCategoryList");
-define("LYT_TAG_ADMIN_CONFIG",               "lytAdminConfig");
-define("LYT_TAG_ADMIN_POST_LIST",            "lytAdminPostList");
-define("LYT_TAG_ADMIN_POST",                 "lytAdminPost");
-define("LYT_TAG_ADMIN_FILE_LIST",            "lytAdminFileList");
-define("LYT_TAG_ADMIN_IMAGE_LIST",           "lytAdminImageList");
-define("LYT_TAG_COMPANY_NAME",               "lytCompanyName");
-define("LYT_TAG_FOLDER_FILE",                "lytFolderFile");
-define("LYT_TAG_FOLDER_IMAGE",               "lytFolderImage");
-define("LYT_TAG_IS_FOLDER_IMAGE_RANDOM",     "lytIsFolderImageRandom");
-define("LYT_TAG_LOGIN_KEY",                  "lytLoginKey");
-define("LYT_TAG_OWNER_NAME",                 "lytOwnerName");
-define("LYT_TAG_OWNER_ALIAS",                "lytOwnerAlias");
-define("LYT_TAG_OWNER_PASSWORD",             "lytOwnerPassword");
-define("LYT_TAG_SITE_ADDRESS_PUBLIC",        "lytSiteAddressPublic");
-define("LYT_TAG_SITE_ADDRESS_SECURE",        "lytSiteAddressSecure");
-define("LYT_TAG_SITE_NAME",                  "lytSiteName");
+define("LYT_CONFIG_FILE_NAME",   "lyt_Config.php");
 
-define("LYT_TAG_IS_USING_GOOGLE_CAPTCHA",    "lytIsUsingGoogleCaptcha");
-define("LYT_TAG_GOOGLE_CREDENTIAL",          "lytGoogleCredential");
-define("LYT_TAG_GOOGLE_ID",                  "lytGoogleId");
-define("LYT_TAG_GOOGLE_SECRET",              "lytGoogleSecret");
+define("LYT_TAG_IS_CONFIGURED",  "lytIsConfigured");
+
+define("LYT_TAG_FOLDER_FILE",    "lytFolderFile");
+define("LYT_TAG_FOLDER_IMAGE",   "lytFolderImage");
+
+define("LYT_TAG_ADMIN_COMPANY",  "lytAdminCompany");
+define("LYT_TAG_ADMIN_LOGIN",    "lytAdminLogin");
+define("LYT_TAG_ADMIN_NAME",     "lytAdminName");
+define("LYT_TAG_ADMIN_PASSWORD", "lytAdminPassword");
+define("LYT_TAG_SITE_NAME",      "lytSiteName");
+define("LYT_TAG_SITE_URL",       "lytSiteUrl");
+define("LYT_TAG_SITE_URL_SAFE",  "lytSiteUrlSecure");
 
 ?>
