@@ -86,7 +86,7 @@ function zFileConnect($file, $mode, $isLocking)
       if ($isLocking)
       {
          // Clean up
-         zcUnLock($fp["lock"]);
+         zLockDestroy($fp["lock"]);
       }
       $fp["file"] = false;
    }
@@ -113,7 +113,7 @@ function zFileDisconnect($fp)
       if ($fp["isLocking"] &&
           $fp["lock"] != "")
       {
-         zcUnLock($fp["lock"]);
+         zLockDestroy($fp["lock"]);
       }
       
       $fp["lock"] = "";

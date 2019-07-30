@@ -45,13 +45,20 @@ $config = false;
 // lytAdminProcess
 function lytAdminProcess()
 {
-   $lytConfig[LYT_TAG_COMPANY_NAME]    = $POST["AdminCompany"];
-   $lytConfig[LYT_TAG_ADMIN_NAME]      = $POST["AdminName"];
-   $lytConfig[LYT_TAG_ADMIN_LOGIN]     = $POST["AdminLogin"];
-   $lytConfig[LYT_TAG_ADMIN_PASSWORD]  = $POST["AdminPassword"];
-   $lytConfig[LYT_TAG_SITE_NAME]       = $POST["SiteName"];
-   $lytConfig[LYT_TAG_SITE_URL]        = $POST["SiteUrl"];
-   $lytConfig[LYT_TAG_SITE_URL_SAFE]   = $POST["SiteUrlSafe"];
+   global $lytConfig;
+    
+   $lytConfig[LYT_TAG_ADMIN_COMPANY]   = $_POST["AdminCompany"];
+   $lytConfig[LYT_TAG_ADMIN_NAME]      = $_POST["AdminName"];
+   $lytConfig[LYT_TAG_ADMIN_LOGIN]     = $_POST["AdminLogin"];
+   $lytConfig[LYT_TAG_SITE_NAME]       = $_POST["SiteName"];
+   $lytConfig[LYT_TAG_SITE_URL]        = $_POST["SiteUrl"];
+   $lytConfig[LYT_TAG_SITE_URL_SAFE]   = $_POST["SiteUrlSafe"];
+
+   // Setting a new password.
+   if ($_POST["AdminPassword"] != "")
+   {
+      $lytConfig[LYT_TAG_ADMIN_PASSWORD] = password_hash($_POST["AdminPassword"], PASSWORD_DEFAULT);
+   }
 
    lytConfigStore();
 }
@@ -61,37 +68,23 @@ function lytAdminProcess()
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Display an admin page.
+// Display the admin page.
 function lytAdminPage()
 {
    $page = ""; 
 
-   zDebugPrint("Admin");
-
-   // Check for login.
-   if      ( lytIsConfigured() &&
-            !lytLoginIsAdminLoggedIn())
+   // There's a post, create the config file.
+   if ($_SERVER['REQUEST_METHOD'] == 'POST')
    {
-      zDebugPrint("Login required");
-      $page = lytLoginPageAdminLogin();
-   }
-   // Display or process the create.
-   else
-   {
-      // There's a post, create the config file.
-      if ($_SERVER['REQUEST_METHOD'] == 'POST')
-      {
-         zDebugPrint("Post");
-         lytAdminProcess();
-      }      
-      $page = lytAdminPageLoad();
-   }
+      lytAdminProcess();
+   }      
+   $page = lytAdminPageLoad();
 
    print $page;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Display the form for the site configuration.
+// Compose the Admin page.
 function lytAdminPageLoad()
 {
    global $lytConfig;
@@ -101,7 +94,7 @@ function lytAdminPageLoad()
    $page = str_replace("[AdminCompany]",  $lytConfig[LYT_TAG_ADMIN_COMPANY],  $page);
    $page = str_replace("[AdminName]",     $lytConfig[LYT_TAG_ADMIN_NAME],     $page);
    $page = str_replace("[AdminLogin]",    $lytConfig[LYT_TAG_ADMIN_LOGIN],    $page);
-   $page = str_replace("[AdminPassword]", $lytConfig[LYT_TAG_ADMIN_PASSWORD], $page);
+   $page = str_replace("[AdminPassword]", "",                                 $page);
    $page = str_replace("[SiteName]",      $lytConfig[LYT_TAG_SITE_NAME],      $page);
    $page = str_replace("[SiteUrl]",       $lytConfig[LYT_TAG_SITE_URL],       $page);
    $page = str_replace("[SiteUrlSafe]",   $lytConfig[LYT_TAG_SITE_URL_SAFE],  $page);

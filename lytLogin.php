@@ -24,6 +24,7 @@ SOFTWARE.
 ////////////////////////////////////////////////////////////////////////////////
 // includes
 require_once "zDebug.php";
+require_once "zFile.php";
 require_once "zHtml.php";
 
 require_once "lyt_Constant.php";
@@ -36,45 +37,14 @@ require_once "lytTemplate.php";
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// lytLoginCrypt
-function lytLoginCrypt($password)
-{
-   return password_hash($password, PASSWORD_DEFAULT);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// lytLoginGetAddress
-function lytLoginGetAddress()
-{
-   return lytConfigGetSiteAddressSecure() . "/_login_.php";
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 
-function lytLoginIsLoggedIn($server, $post)
-{
-   // We are on a secure connection and
-   // We have done the login and
-   // the login key is the same...
-   if (lytLoginIsSecure($server)    &&
-       lytConfigGetLoginKey() != "" &&
-       lytConfigGetLoginKey() === $post[LYT_TAG_LOGIN_KEY])
-   {
-      // We are logged in.
-      return true;
-   }
-
-   return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // lytLoginIsSecure
-function lytLoginIsSecure($server)
+function lytLoginIsSecure()
 {
-   $thisUri     = "https://" . $server["HTTP_HOST"] . $server["REQUEST_URI"];
-   $expectedUri = lytConfigGetSiteAddressSecure() . "/" . lytConfigGetFolderCandy() . "/_login_.php";
+   global $lytConfig;
+   
+   $thisUri = "https://" . $_SERVER["HTTP_HOST"];
 
-   if ($thisUri === $expectedUri)
+   if ($thisUri === $lytConfig[LYT_TAG_SITE_URL_SAFE])
    {
       return true;
    }
@@ -83,9 +53,9 @@ function lytLoginIsSecure($server)
 
 ////////////////////////////////////////////////////////////////////////////////
 // lytLoginPasswordVerify
-function lytLoginPasswordVerify($post)
+function lytLoginPasswordVerify()
 {
-   if (password_verify($post[LYT_TAG_OWNER_PASSWORD], lytConfigGetOwnerPassword()))
+   if (password_verify($_POST[LYT_TAG_OWNER_PASSWORD], lytConfigGetOwnerPassword()))
    {
       return true;
    }
@@ -94,37 +64,17 @@ function lytLoginPasswordVerify($post)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Display
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// lytLoginContentGetForm
-function lytLoginContentGetForm()
+// Process the login
+function lytLoginProcess()
 {
-   $str = LYT_TAG_OWNER_PASSWORD;
-
-   // First time lytLogin will set the password as well as lytLogin.
-   if (lytConfigGetOwnerPassword() == "")
+   global $lytConfig;
+   
+   // Check if this is the admin.
+   if ($_POST["LoginName"] === $lytConfig[LYT_TAG_ADMIN_LOGIN] &&
+       password_verify($_POST["loginPassword"], lytConfig[LYT_TAG_ADMIN_PASSWORD]))
    {
-      $button = "Set Password and Login";
-   }
-   // Not the first time logging in.  
-   else
-   {
-      $button = "Login";
-   }
-
-   return "" .
-      zHtmlForm(false, "_login_.php", 
-         zHtmlTable("",
-            zHtmlTableRow("",
-               zHtmlTableCol("",
-                  zHtmlStrNonBreaking("WebSite Password:"),
-                  zHtmlFormInputPassword("", LYT_TAG_OWNER_PASSWORD)),
-               zHtmlTableCol("",
-                  "",
-                  zHtmlFormInputButtonSubmit("", "", 
-                     $button)))));
+      setcookie("isAdmin", $_POST["loginPassword"], time() + 21600, "/");
+   }       
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,95 +92,43 @@ function lytLoginContentGetMessageInsecureAddress()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// lytLoginContentGetMessagePasswordMismatch
-function lytLoginContentGetMessagePasswordMismatch()
+// Page
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Display the login page
+function lytLoginPage()
 {
-/*
-   $str = lytLoginGetAddress();
-
-   return "" . 
+   $page = "";
    
-  <p class=lytTitle>CANDY: Login</h1>
-  
-  <p class=lyt>Login failed.</p>
-
-  <p class=lyt><a href="$str">Secure Login</p>
-PRINT;
-*/
-return "";
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Doc
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// Get the login page
-function lytPageLogin($server, $post)
-{
-   $content = "";
-   
-   // Config file could not be loaded.
-   if      (!lytConfigLoad())
-   {
-      $content .= lytConfigContentGetMessageConfigIsMissing();
-   }
    // Not using the secure address.
-   else if (!lytLoginIsSecure($_SERVER))
-   {
-      $content .= lytLoginContentGetMessageInsecureAddress();
-   }
-   // Login...
-   else
+   if (lytLoginIsSecure())
    {
       // Post verify password.
-      if ($server['REQUEST_METHOD'] == 'POST')
+      if ($_SERVER['REQUEST_METHOD'] == 'POST')
       {
-         /*
-         // There isn't a password set yet.  Create one now.
-         if (lytConfigGetOwnerPassword() === '')
-         {
-            lytConfigSetOwnerPassword(lytLoginCrypt($_POST[LYT_TAG_OWNER_PASSWORD]));
-            lytConfigStore();
-         }
-      
-         // There is a password set.  Compare passwords.
-         if (lytLoginPasswordVerify($post))
-         {
-            // Create a session key as save it in the config file.
-            $loginKey = "". rand();
-            lytConfigSetLoginKey(lytLoginCrypt($loginKey));
-            lytConfigStore();
-
-            // Set the session key on the post.
-            $_POST[LYT_TAG_LOGIN_KEY] = $lytLoginKey;
-
-            // Button to the admin pages.
-            lytAdminDisplay_Button(LYT_TAG_ADMIN_PAGE_CONFIG, "", "Go To Admin Pages");
-         }
-         // Password comparison failed. 
-         else
-         {
-            lytLoginContentGetMessagePasswordMismatch();
-         }
-         */
+         lytLoginProcess();
       }      
       // Display lytLogin form.
       else
       {
-         $content = lytLoginContentGetForm();
+         $page = lytLoginPageLoad();
       }
    }
 
-   $page = lytPageSet(
-      "",
-      "LYT Admin Login",
-      "",
-      "",
-      $content,
-      "",
-      "");
-      
+   print $page;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Compose the login page.
+function lytLoginPageLoad()
+{
+   $page = lytTemplateLoadPage();
+   
+   $page = lytTemplateReplaceColumnMain(lytTemplateGetLoginForm());
+   
+   $page = lytTemplateReplaceCommon($page);
+
    return $page;
 }
 

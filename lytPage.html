@@ -20,7 +20,11 @@
    <tr>
     <td class="lytMenu" colspan=3>
      <p class="lytMenu">
-<!--[MenuTemplate{]--><a class="lytMenu" href="[MenuLink]">[MenuTitle]</a><!--[}MenuTemplate]-->
+[Menu]
+
+<!--MenuTemplate{-->
+<a class="lytMenu" href="[MenuLink]">[MenuTitle]</a>
+<!--}MenuTemplate-->
      </p>
     </td>
    </tr>
@@ -33,13 +37,30 @@
     
     <td class="lytColumn">
 <!--center column-->
-<!--[PostTemplate{]-->
+[ColMain]
+
+<!--PostTemplate{-->
 <table>
  <tr><td class="lytPostTitle" colspan=2><h1 class="lytPost">[PostTitle]</h1></td></tr>
  <tr><td><h2 class="lytPost">[PostAuthor]</h2></td> <td><h2 class="lytPostRight">[PostDate]</h2></td></tr>
  <tr><td>[PostBody]</td></tr>
 </table>
-<!--[}PostTemplate]-->
+<!--}PostTemplate-->
+
+<!--Login{-->
+<form action="[UrlSafe]/lyt.php" method=post>
+ <table>
+  <tr><td class="lytPostTitle" colspan=2><h1 class="lytPost">Login</h1></td></tr>
+
+  <tr><td colspan=2>A cookie will be used to only keep track of who you are and only for this website.</td></tr>
+
+  <tr><td>Name:</td>     <td><input type=text     size=80 name=LoginName     /></td></tr>
+  <tr><td>Password:</td> <td><input type=password size=80 name=LoginPassword /></td></tr>
+
+  <tr><td><input type=submit value="Login"</td></tr>
+ </table>
+</form>
+<!--}Login-->
     </td>
     
     <td class="lytColumnR">
