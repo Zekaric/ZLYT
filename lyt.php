@@ -40,7 +40,8 @@ require_once "lyt_Config.php";
 
 require_once "lytAdmin.php";
 require_once "lytConfig.php";
-//require_once "lytLogin.php";
+require_once "lytLogin.php";
+require_once "lytSection.php";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Get a URL value.
@@ -71,15 +72,16 @@ if      (!lytIsConfigured() ||
 // Login page
 else if ($op == "login")
 {
-   zDebugPrint("Todo");
-//   print lytLoginPage();
-//   exit(0);
+   $page = lytLoginPage();
+   if ($page != "")
+   {
+      print $page;
+      exit(0);
+   }
 }
 
 // Default screen.
-
-zDebugPrint("TODO: Topic display.");
-//print lytTopicPage();
+print lytSectionPage();
 exit(0);
 
 ?>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" type="text/css" href="style_reset.css">
   <link rel="stylesheet" type="text/css" href="lyt.css">
-  <Title>[Title]</Title>
+  <Title>[SiteTitle]:[PageTitle]</Title>
 <!--[HtmlHead]-->
  </head>
  <body>
@@ -14,7 +14,7 @@
 <!--title-->
 <!--lytImage will be globally changed to the random folder when the site is deployed.
     Use lytImage when designing.-->
-<a class="lytTitle" href="[UrlSafe]"><img src="lytImage/title.gif" alt="[Title]" title="[Title]"/></a>
+<a class="lytTitle" href="[SiteUrlSafe]"><img src="lytImage/title.gif" alt="[SiteTitle]" title="[SiteTitle]"/></a>
     </td>
    </tr>
    <tr>
@@ -32,7 +32,14 @@
    <tr>
     <td class="lytColumnL">
 <!--left   column-->
+<!--ColLTemplate{-->
+<a href='[Link]'>[Title]</a><br />
+<!--}ColLTemplate-->
+<p class="lytColL">
+<a href='[LinkLogin]'>Login</a><br />
+[LinkAdmin]<br />
 [ColL]
+</p>
     </td>
     
     <td class="lytColumn">
@@ -41,18 +48,31 @@
 
 <!--PostTemplate{-->
 <table>
- <tr><td class="lytPostTitle" colspan=2><h1 class="lytPost">[PostTitle]</h1></td></tr>
- <tr><td><h2 class="lytPost">[PostAuthor]</h2></td> <td><h2 class="lytPostRight">[PostDate]</h2></td></tr>
- <tr><td>[PostBody]</td></tr>
+ <tr><td class="lytPostTitle" colspan=2><h1 class="lytPostTitle">[PostTitle]</h1></td></tr>
+ <tr>
+  <td class="lytPostTitleSub"><h1 class="lytPostTitleSub">[PostAuthor]</h2></td> 
+  <td class="lytPostTitleSub"><h1 class="lytPostTitleSub">[PostDate]</h2></td></tr>
+ <tr><td class="lytPostBody">[PostBody]</td></tr>
 </table>
 <!--}PostTemplate-->
+<!--PostParaTemplate{-->
+<p class="lytPostPara">[PostParaBody]</p>
+<!--}PostParaTemplate-->
+<!--PostCodeTemplate{-->
+<pre class="lytPostPara">[PostParaBody]</pre>
+<!--}PostCodeTemplate-->
 
-<!--Login{-->
-<form action="[UrlSafe]/lyt.php" method=post>
+<!--LoginTemplate{-->
+<form action="[SiteUrlSafe]/lyt.php" method=post>
  <table>
-  <tr><td class="lytPostTitle" colspan=2><h1 class="lytPost">Login</h1></td></tr>
+  <tr><td class="lytPostTitle" colspan=2><h1 class="lytPostTitle">Login</h1></td></tr>
 
-  <tr><td colspan=2>A cookie will be used to only keep track of who you are and only for this website.</td></tr>
+  <tr>
+   <td colspan=2>
+    A cookie will be used to only keep track of who you are and only for this website.
+    <input type=hidden name=op value=login />
+   </td>
+  </tr>
 
   <tr><td>Name:</td>     <td><input type=text     size=80 name=LoginName     /></td></tr>
   <tr><td>Password:</td> <td><input type=password size=80 name=LoginPassword /></td></tr>
@@ -60,7 +80,7 @@
   <tr><td><input type=submit value="Login"</td></tr>
  </table>
 </form>
-<!--}Login-->
+<!--}LoginTemplate-->
     </td>
     
     <td class="lytColumnR">

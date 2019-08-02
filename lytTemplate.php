@@ -23,15 +23,19 @@ SOFTWARE.
 
 ///////////////////////////////////////////////////////////////////////////////
 // includes
+require_once "zDebug.php";
 require_once "zFile.php";
 
 require_once "lyt_Constant.php";
 require_once "lyt_Config.php";
 
-$lytTemplateLogin = "";
-$lytTemplateMenu  = "";
-$lytTemplatePage  = "";
-$lytTemplatePost  = "";
+$lytTemplateColL     = "";
+$lytTemplateLogin    = "";
+$lytTemplateMenu     = "";
+$lytTemplatePage     = "";
+$lytTemplatePost     = "";
+$lytTemplatePostCode = "";
+$lytTemplatePostPara = "";
 
 ///////////////////////////////////////////////////////////////////////////////
 // Get the login form.
@@ -43,30 +47,57 @@ function lytTemplateGetLoginForm()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Get the login link.
+function lytTemplateGetLinkLogin()
+{
+   global $lytConfig;
+   
+   return $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lyt.php?op=login";
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Load in the page template file.
 function lytTemplateLoadPage()
 {
-   global $lytTemplateLogin;
-   global $lytTemplateMenu;
-   global $lytTemplatePage;
-   global $lytTemplatePost;
+   global $lytTemplateColL     ;
+   global $lytTemplateLogin    ;
+   global $lytTemplateMenu     ;
+   global $lytTemplatePage     ;
+   global $lytTemplatePost     ;
+   global $lytTemplatePostCode ;
+   global $lytTemplatePostPara ;
    
    $page = zFileLoadText("lytPage.html", false);
    
-   $start            = strpos($page, "<!--LoginTemplate{-->", 0);
-   $end              = strpos($page, "<!--}LoginTemplate-->", 0);
-   $lytTemplateLogin = str_replace(  "<!--LoginTemplate{-->", "", substr($page, $start, $end - $start));
-   $page             = str_replace(  "<!--}LoginTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-
-   $start            = strpos($page, "<!--MenuTemplate{-->", 0);
-   $end              = strpos($page, "<!--}MenuTemplate-->", 0);
-   $lytTemplateMenu  = str_replace(  "<!--MenuTemplate{-->", "", substr($page, $start, $end - $start));
-   $page             = str_replace(  "<!--}MenuTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-                     
-   $start            = strpos($page, "<!--PostTemplate{-->", 0);
-   $end              = strpos($page, "<!--}PostTemplate-->", 0);
-   $lytTemplatePost  = str_replace(  "<!--PostTemplate{-->", "", substr($page, $start, $end - $start));
-   $page             = str_replace(  "<!--}PostTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
+   $start               = strpos($page, "<!--LoginTemplate{-->", 0);
+   $end                 = strpos($page, "<!--}LoginTemplate-->", 0);
+   $lytTemplateLogin    = str_replace(  "<!--LoginTemplate{-->", "", substr($page, $start, $end - $start));
+   $page                = str_replace(  "<!--}LoginTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
+   
+   $start               = strpos($page, "<!--MenuTemplate{-->", 0);
+   $end                 = strpos($page, "<!--}MenuTemplate-->", 0);
+   $lytTemplateMenu     = str_replace(  "<!--MenuTemplate{-->", "", substr($page, $start, $end - $start));
+   $page                = str_replace(  "<!--}MenuTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
+                        
+   $start               = strpos($page, "<!--PostTemplate{-->", 0);
+   $end                 = strpos($page, "<!--}PostTemplate-->", 0);
+   $lytTemplatePost     = str_replace(  "<!--PostTemplate{-->", "", substr($page, $start, $end - $start));
+   $page                = str_replace(  "<!--}PostTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
+   
+   $start               = strpos($page, "<!--PostParaTemplate{-->", 0);
+   $end                 = strpos($page, "<!--}PostParaTemplate-->", 0);
+   $lytTemplatePostPara = str_replace(  "<!--PostParaTemplate{-->", "", substr($page, $start, $end - $start));
+   $page                = str_replace(  "<!--}PostParaTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
+   
+   $start               = strpos($page, "<!--PostCodeTemplate{-->", 0);
+   $end                 = strpos($page, "<!--}PostCodeTemplate-->", 0);
+   $lytTemplatePostCode = str_replace(  "<!--PostCodeTemplate{-->", "", substr($page, $start, $end - $start));
+   $page                = str_replace(  "<!--}PostCodeTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
+   
+   $start               = strpos($page, "<!--ColLTemplate{-->", 0);
+   $end                 = strpos($page, "<!--}ColLTemplate-->", 0);
+   $lytTemplateColL     = str_replace(  "<!--ColLTemplate{-->", "", substr($page, $start, $end - $start));
+   $page                = str_replace(  "<!--}ColLTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
    
    $lytTemplatePage  = $page;
    
@@ -81,10 +112,22 @@ function lytTemplateLoadPageAdmin()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Replace the main part of the page.
-function lytTemplateReplaceColumnMain($body)
+// Using the col left template.
+function lytTemplateMakeColL($strLink, $strTitle)
 {
-   return str_replace("[ColMain]", $body);
+   global $lytTemplateColL;
+   
+   $result = str_replace("[Link]",  $strLink,  $lytTemplateColL);
+   $result = str_replace("[Title]", $strTitle, $result);
+   
+   return $result;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Replace the main part of the page.
+function lytTemplateReplaceColumnMain($page, $body)
+{
+   return str_replace("[ColMain]", $body, $page);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,10 +135,21 @@ function lytTemplateReplaceColumnMain($body)
 function lytTemplateReplaceCommon($page)
 {
    global $lytConfig;
+
+   $page = str_replace("[LinkLogin]", lytTemplateGetLinkLogin(), $page);
+   //if (Admin is logged in)
+   //{
+   // $page = str_replace("[LinkAdmin]", "<a href='" . lytTemplateGetLinkAdmin() "'>Admin</a>", $page);
+   //}
+   //else
+   //{
+      $page = str_replace("[LinkAdmin]", "", $page);
+   //}
    
-   $page = str_replace("[SiteName]",      $lytConfig[LYT_TAG_SITE_NAME],      $page);
-   $page = str_replace("[SiteUrl]",       $lytConfig[LYT_TAG_SITE_URL],       $page);
-   $page = str_replace("[SiteUrlSafe]",   $lytConfig[LYT_TAG_SITE_URL_SAFE],  $page);
+   $page = str_replace("lytImage",        $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lytImage", $page);
+   $page = str_replace("[SiteTitle]",     $lytConfig[LYT_TAG_SITE_NAME],                  $page);
+   $page = str_replace("[SiteUrl]",       $lytConfig[LYT_TAG_SITE_URL],                   $page);
+   $page = str_replace("[SiteUrlSafe]",   $lytConfig[LYT_TAG_SITE_URL_SAFE],              $page);
    
    return $page;
 }

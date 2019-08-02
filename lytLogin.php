@@ -40,14 +40,12 @@ require_once "lytTemplate.php";
 // lytLoginIsSecure
 function lytLoginIsSecure()
 {
-   global $lytConfig;
-   
-   $thisUri = "https://" . $_SERVER["HTTP_HOST"];
-
-   if ($thisUri === $lytConfig[LYT_TAG_SITE_URL_SAFE])
+   if (isset($_SERVER['HTTPS']) &&
+       $_SERVER['HTTPS'] === "on")
    {
       return true;
    }
+   
    return false;
 }
 
@@ -71,9 +69,9 @@ function lytLoginProcess()
    
    // Check if this is the admin.
    if ($_POST["LoginName"] === $lytConfig[LYT_TAG_ADMIN_LOGIN] &&
-       password_verify($_POST["loginPassword"], lytConfig[LYT_TAG_ADMIN_PASSWORD]))
+       password_verify($_POST["LoginPassword"], $lytConfig[LYT_TAG_ADMIN_PASSWORD]))
    {
-      setcookie("isAdmin", $_POST["loginPassword"], time() + 21600, "/");
+      setcookie("isAdmin", $_POST["LoginPassword"], time() + 21600, "/");
    }       
 }
 
@@ -99,24 +97,27 @@ function lytLoginContentGetMessageInsecureAddress()
 // Display the login page
 function lytLoginPage()
 {
-   $page = "";
-   
    // Not using the secure address.
-   if (lytLoginIsSecure())
+   if (!lytLoginIsSecure())
    {
-      // Post verify password.
-      if ($_SERVER['REQUEST_METHOD'] == 'POST')
-      {
-         lytLoginProcess();
-      }      
-      // Display lytLogin form.
-      else
-      {
-         $page = lytLoginPageLoad();
-      }
+      return "";
    }
 
-   print $page;
+   $page = "";
+   
+   // Post verify password.
+   if ($_SERVER['REQUEST_METHOD'] == 'POST')
+   {
+      zDebugPrint("Login Process");
+      lytLoginProcess();
+   }      
+   // Display lytLogin form.
+   else
+   {
+      $page = lytLoginPageLoad();
+   }
+
+   return $page;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,9 +126,8 @@ function lytLoginPageLoad()
 {
    $page = lytTemplateLoadPage();
    
-   $page = lytTemplateReplaceColumnMain(lytTemplateGetLoginForm());
-   
-   $page = lytTemplateReplaceCommon($page);
+   $page = lytTemplateReplaceColumnMain($page, lytTemplateGetLoginForm());
+   $page = lytTemplateReplaceCommon(    $page);
 
    return $page;
 }

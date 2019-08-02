@@ -29,7 +29,9 @@ function zDebugPrint($value)
 {
    if (DEBUGGING_IS_ON)
    {
-      print "DEBUG: " . $value . "<br />\n";
+      $str = str_replace("<", "&lt;", $value);
+      $str = str_replace(">", "&gt;", $str);
+      print "<pre>DEBUG: " . $str . "</pre><br />\n";
    }
 }
 
