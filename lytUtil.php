@@ -22,21 +22,34 @@ SOFTWARE.
 ******************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
-// Constants
-define("LYT_CONFIG_FILE_NAME",   "lyt_Config.php");
+// API
+////////////////////////////////////////////////////////////////////////////////
 
-define("LYT_TAG_IS_CONFIGURED",  "lytIsConfigured");
-define("LYT_TAG_IS_USER_ADMIN",  "lytIsUserAdmin");
+////////////////////////////////////////////////////////////////////////////////
+// lytConnectionIsSecure
+function lytConnectionIsSecure()
+{
+   if (isset($_SERVER['HTTPS']) &&
+       $_SERVER['HTTPS'] === "on")
+   {
+      return true;
+   }
+   
+   return false;
+}
 
-define("LYT_TAG_FOLDER_FILE",    "lytFolderFile");
-define("LYT_TAG_FOLDER_IMAGE",   "lytFolderImage");
+///////////////////////////////////////////////////////////////////////////////
+// Get a URL value.
+function lytGetValue($key)
+{
+   // Check the _GET (in URL) if there is a value...
+   // If not, check the _POST if there is value...
+   // If not then "" 
+   return 
+      (isset($_GET[$key]) ? 
+         $_GET[$key]      : 
+         (isset($_POST["op"]) ? $_POST["op"] : ""));
+}
 
-define("LYT_TAG_ADMIN_COMPANY",  "lytAdminCompany");
-define("LYT_TAG_ADMIN_LOGIN",    "lytAdminLogin");
-define("LYT_TAG_ADMIN_NAME",     "lytAdminName");
-define("LYT_TAG_ADMIN_PASSWORD", "lytAdminPassword");
-define("LYT_TAG_SITE_NAME",      "lytSiteName");
-define("LYT_TAG_SITE_URL",       "lytSiteUrl");
-define("LYT_TAG_SITE_URL_SAFE",  "lytSiteUrlSecure");
 
 ?>

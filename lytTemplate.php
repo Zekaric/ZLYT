@@ -28,6 +28,7 @@ require_once "zFile.php";
 
 require_once "lyt_Constant.php";
 require_once "lyt_Config.php";
+require_once "lytLogin.php";
 
 $lytTemplateColL     = "";
 $lytTemplateLogin    = "";
@@ -47,11 +48,25 @@ function lytTemplateGetLoginForm()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Get the link to the admin page.
+function lytTemplateGetLinkAdmin()
+{
+   global $lytConfig;
+   
+   return $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lyt.php?op=admin";
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Get the login link.
 function lytTemplateGetLinkLogin()
 {
    global $lytConfig;
    
+   if (lytLoginIsUserAdmin())
+   {
+      return $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lyt.php?op=logout";
+   }
+
    return $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lyt.php?op=login";
 }
 
@@ -136,17 +151,19 @@ function lytTemplateReplaceCommon($page)
 {
    global $lytConfig;
 
-   $page = str_replace("[LinkLogin]", lytTemplateGetLinkLogin(), $page);
-   //if (Admin is logged in)
-   //{
-   // $page = str_replace("[LinkAdmin]", "<a href='" . lytTemplateGetLinkAdmin() "'>Admin</a>", $page);
-   //}
-   //else
-   //{
-      $page = str_replace("[LinkAdmin]", "", $page);
-   //}
+   $linkLogin = "<a href='" . lytTemplateGetLinkLogin() . "'>Login</a>";
+   $linkAdmin = "";
    
-   $page = str_replace("lytImage",        $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lytImage", $page);
+   if (lytLoginIsUserAdmin())
+   {
+      $linkLogin = "<a href='" . lytTemplateGetLinkLogin() . "'>Logout</a>";
+      $linkAdmin = "<a href='" . lytTemplateGetLinkAdmin() . "'>Admin</a>";
+   }
+
+   $page = str_replace("[LinkLogin]",     $linkLogin,                                     $page);
+   $page = str_replace("[LinkAdmin]",     $linkAdmin,                                     $page);
+   
+   $page = str_replace("lytImage",        $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lytImage",$page);
    $page = str_replace("[SiteTitle]",     $lytConfig[LYT_TAG_SITE_NAME],                  $page);
    $page = str_replace("[SiteUrl]",       $lytConfig[LYT_TAG_SITE_URL],                   $page);
    $page = str_replace("[SiteUrlSafe]",   $lytConfig[LYT_TAG_SITE_URL_SAFE],              $page);

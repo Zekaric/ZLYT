@@ -37,15 +37,15 @@ require_once "lytTemplate.php";
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// lytLoginIsSecure
-function lytLoginIsSecure()
+// Is the user the admin
+function lytLoginIsUserAdmin()
 {
-   if (isset($_SERVER['HTTPS']) &&
-       $_SERVER['HTTPS'] === "on")
+   if (lytConnectionIsSecure()                 &&
+       isset($_SESSION[LYT_TAG_IS_USER_ADMIN]) &&
+       $_SESSION[LYT_TAG_IS_USER_ADMIN])
    {
       return true;
    }
-   
    return false;
 }
 
@@ -68,25 +68,15 @@ function lytLoginProcess()
    global $lytConfig;
    
    // Check if this is the admin.
+   $_SESSION[LYT_TAG_IS_USER_ADMIN] = false;
    if ($_POST["LoginName"] === $lytConfig[LYT_TAG_ADMIN_LOGIN] &&
        password_verify($_POST["LoginPassword"], $lytConfig[LYT_TAG_ADMIN_PASSWORD]))
    {
-      setcookie("isAdmin", $_POST["LoginPassword"], time() + 21600, "/");
-   }       
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// lytLoginContentGetMessageInsecureAddress
-function lytLoginContentGetMessageInsecureAddress()
-{
-   return "" .
-      zHtmlParaHeader("", "1", 
-         "LYT Login") . 
-      zHtmlPara("", 
-         "Insecure address used.") .
-      zHtmlPara("",
-         zHtmlLink("",
-            lytLoginGetAddress(), "Secure Login"));
+      $_SESSION[LYT_TAG_IS_USER_ADMIN] = true;
+   }
+   // Todo general user login.
+   
+   session_write_close();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +88,7 @@ function lytLoginContentGetMessageInsecureAddress()
 function lytLoginPage()
 {
    // Not using the secure address.
-   if (!lytLoginIsSecure())
+   if (!lytConnectionIsSecure())
    {
       return "";
    }
@@ -130,6 +120,22 @@ function lytLoginPageLoad()
    $page = lytTemplateReplaceCommon(    $page);
 
    return $page;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// startup the code.
+function lytLoginStart()
+{
+   session_start();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// End the login session.
+function lytLoginStop()
+{
+   $_SESSION = array();
+   session_unset();
+   session_destroy();
 }
 
 ?>

@@ -42,32 +42,30 @@ require_once "lytAdmin.php";
 require_once "lytConfig.php";
 require_once "lytLogin.php";
 require_once "lytSection.php";
-
-///////////////////////////////////////////////////////////////////////////////
-// Get a URL value.
-function lytGetValue($key)
-{
-   // Check the _GET (in URL) if there is a value...
-   // If not, check the _POST if there is value...
-   // If not then "" 
-   return 
-      (isset($_GET[$key]) ? 
-         $_GET[$key]      : 
-         (isset($_POST["op"]) ? $_POST["op"] : ""));
-}
+require_once "lytUtil.php";
 
 ///////////////////////////////////////////////////////////////////////////////
 // The main page for the program.
+
+// Only start the session when things are secure.
+lytLoginStart();
 
 // What are we wanting to do.
 $op = lytGetValue("op");
 
 // Admin page
 if      (!lytIsConfigured() ||
-         $op == "admin")
+         (lytLoginIsUserAdmin() &&
+          $op == "admin"))
 {
    print lytAdminPage();
    exit(0);
+}
+// Logout.
+else if ($op == "logout")
+{
+   lytLoginStop();
+   lytLoginStart();
 }
 // Login page
 else if ($op == "login")
