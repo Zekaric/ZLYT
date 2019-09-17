@@ -235,5 +235,3 @@ function zFileStoreTextArray($fileName, $lineArray, $isLocking)
 
    return true;
 }
-
-?>

@@ -49,5 +49,3 @@ function zDebugPrintArray($data)
       zDebugPrint("}");
    }
 }
-
-?>

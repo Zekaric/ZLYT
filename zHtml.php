@@ -261,5 +261,3 @@ function zHtmlListNumber($class, ...$content)
    
    $str .= "</ol>\n";
 }
-
-?>

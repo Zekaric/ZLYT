@@ -90,5 +90,3 @@ function lytConfigStore()
 
    zFileStoreText(LYT_CONFIG_FILE_NAME, $lytConfigFileContent, true);
 }
-
-?>

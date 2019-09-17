@@ -170,5 +170,3 @@ function lytTemplateReplaceCommon($page)
    
    return $page;
 }
-
-?>

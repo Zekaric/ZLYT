@@ -101,5 +101,3 @@ function lytAdminPageLoad()
 
    return $page;
 }
-
-?>

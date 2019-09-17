@@ -50,6 +50,3 @@ function lytGetValue($key)
          $_GET[$key]      : 
          (isset($_POST["op"]) ? $_POST["op"] : ""));
 }
-
-
-?>

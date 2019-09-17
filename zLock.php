@@ -130,4 +130,3 @@ function _zLockFileName($fileName)
    // Creating a unique lock name.
    return "lock_file_" . $fileName;
 }
-?>

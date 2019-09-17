@@ -137,5 +137,3 @@ function lytLoginStop()
    session_unset();
    session_destroy();
 }
-
-?>

@@ -13,5 +13,3 @@ $lytConfig[LYT_TAG_ADMIN_PASSWORD ] = '$2y$10$DyeJTOxCfmb7AiR/5vW3g..Xlg9987GjaQ
 $lytConfig[LYT_TAG_SITE_NAME      ] = 'Zekaric';
 $lytConfig[LYT_TAG_SITE_URL       ] = 'http://127.0.0.1/ZLYT';
 $lytConfig[LYT_TAG_SITE_URL_SAFE  ] = 'https://127.0.0.1/ZLYT';
-
-?>
