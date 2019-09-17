@@ -49,22 +49,25 @@ lyt_Constant.php
             LYT_TAG_FOLDER_FILE     LYT_TAG_ADMIN_PASSWORD
             LYT_TAG_FOLDER_IMAGE
 lytAdmin.php
-                        lytAdminProcess(                        )
             String      lytAdminPage(                           )
-            String      lytAdminPageLoad(                       )
+                        lytAdminProcess(                        )
 lytConfig.php
             Bool        lytIsConfigured(                        )
                         lytConfigChangeImageFolder(             )
                         lytConfigStore(                         )
+lytDisplay.php
+            String      lytDisplayPage(                         )
+                        lytDisplayProcessComment(               )
 lytLogin.php
+            Bool        lytLoginIsPasswordGood(                 )
             Bool        lytLoginIsUserAdmin(                    )
-            Bool        lytLoginPasswordVerify(                 )
-                        lytLoginProcess(                        )
             String      lytLoginPage(                           )
-            String      lytLoginPageLoad(                       )
+                        lytLoginProcess(                        )
                         lytLoginStart(                          )
                         lytLoginStop(                           )
-lytSection.php
+lytPost.php
+            String      lytPostPage(                            )
+                        lytPostProcess(                         )
 lytTemplate.php
             String      lytTemplateGetLoginForm(                )
             String      lytTemplateGetLinkAdmin(                )

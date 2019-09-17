@@ -22,7 +22,7 @@ SOFTWARE.
 ******************************************************************************/
 
 ////////////////////////////////////////////////////////////////////////////////
-// Include
+// include
 require_once "zDebug.php";
 require_once "zFile.php";
 require_once "zHtml.php";
@@ -38,11 +38,28 @@ require_once "lytConfig.php";
 $config = false;
 
 ////////////////////////////////////////////////////////////////////////////////
-// API
+// global 
+// function
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// lytAdminProcess
+// Display the admin page.
+function lytAdminPage()
+{
+   $page = ""; 
+
+   // There's a post, create the config file.
+   if ($_SERVER['REQUEST_METHOD'] == 'POST')
+   {
+      lytAdminProcess();
+   }      
+   $page = _AdminPageLoad();
+
+   print $page;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// process the changes to the configuration of the site.
 function lytAdminProcess()
 {
    global $lytConfig;
@@ -64,28 +81,13 @@ function lytAdminProcess()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Page
+// local
+// function
 ////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// Display the admin page.
-function lytAdminPage()
-{
-   $page = ""; 
-
-   // There's a post, create the config file.
-   if ($_SERVER['REQUEST_METHOD'] == 'POST')
-   {
-      lytAdminProcess();
-   }      
-   $page = lytAdminPageLoad();
-
-   print $page;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Compose the Admin page.
-function lytAdminPageLoad()
+function _AdminPageLoad()
 {
    global $lytConfig;
 

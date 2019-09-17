@@ -33,7 +33,8 @@ require_once "lyt_Config.php";
 require_once "lytTemplate.php";
 
 ////////////////////////////////////////////////////////////////////////////////
-// API
+// global
+// function
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,8 +51,35 @@ function lytLoginIsUserAdmin()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// lytLoginPasswordVerify
-function lytLoginPasswordVerify()
+// Display the login page
+function lytLoginPage()
+{
+   // Not using the secure address.
+   if (!lytConnectionIsSecure())
+   {
+      return "";
+   }
+
+   $page = "";
+   
+   // Post verify password.
+   if ($_SERVER['REQUEST_METHOD'] == 'POST')
+   {
+      zDebugPrint("Login Process");
+      lytLoginProcess();
+   }      
+   // Display lytLogin form.
+   else
+   {
+      $page = _LoginPageLoad();
+   }
+
+   return $page;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Verify that a password is good.
+function lytLoginIsPasswordGood()
 {
    if (password_verify($_POST[LYT_TAG_OWNER_PASSWORD], lytConfigGetOwnerPassword()))
    {
@@ -80,49 +108,6 @@ function lytLoginProcess()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Page
-////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////
-// Display the login page
-function lytLoginPage()
-{
-   // Not using the secure address.
-   if (!lytConnectionIsSecure())
-   {
-      return "";
-   }
-
-   $page = "";
-   
-   // Post verify password.
-   if ($_SERVER['REQUEST_METHOD'] == 'POST')
-   {
-      zDebugPrint("Login Process");
-      lytLoginProcess();
-   }      
-   // Display lytLogin form.
-   else
-   {
-      $page = lytLoginPageLoad();
-   }
-
-   return $page;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Compose the login page.
-function lytLoginPageLoad()
-{
-   $page = lytTemplateLoadPage();
-   
-   $page = lytTemplateReplaceColumnMain($page, lytTemplateGetLoginForm());
-   $page = lytTemplateReplaceCommon(    $page);
-
-   return $page;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // startup the code.
 function lytLoginStart()
 {
@@ -136,4 +121,21 @@ function lytLoginStop()
    $_SESSION = array();
    session_unset();
    session_destroy();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// local
+// function
+////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Compose the login page.
+function _LoginPageLoad()
+{
+   $page = lytTemplateLoadPage();
+   
+   $page = lytTemplateReplaceColumnMain($page, lytTemplateGetLoginForm());
+   $page = lytTemplateReplaceCommon(    $page);
+
+   return $page;
 }

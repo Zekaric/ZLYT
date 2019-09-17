@@ -81,5 +81,3 @@ else if ($op == "login")
 // Default screen.
 print lytSectionPage();
 exit(0);
-
-?>
