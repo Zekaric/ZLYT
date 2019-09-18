@@ -48,6 +48,10 @@ lyt_Constant.php
             LYT_TAG_IS_USER_ADMIN   LYT_TAG_ADMIN_NAME      LYT_TAG_SITE_URL_SAFE
             LYT_TAG_FOLDER_FILE     LYT_TAG_ADMIN_PASSWORD
             LYT_TAG_FOLDER_IMAGE
+            LYT_FILE_NAME_CONFIG
+            LYT_FILE_NAME_SECTION
+lyt_Section.php
+            $lytSectionList[]
 lytAdmin.php
             String      lytAdminPage(                           )
                         lytAdminProcess(                        )
@@ -68,6 +72,8 @@ lytLogin.php
 lytPost.php
             String      lytPostPage(                            )
                         lytPostProcess(                         )
+lytSection.php
+                        lytSectionCreate(                       name, key)
 lytTemplate.php
             String      lytTemplateGetLoginForm(                )
             String      lytTemplateGetLinkAdmin(                )

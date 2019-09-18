@@ -28,11 +28,7 @@ require_once "zFile.php";
 require_once "zHtml.php";
 
 require_once "lyt_Constant.php";
-require_once "lyt_Config.php";
-
-////////////////////////////////////////////////////////////////////////////////
-// variables
-$config = false;
+require_once "lyt_Section.php";
 
 ////////////////////////////////////////////////////////////////////////////////
 // global
@@ -40,14 +36,58 @@ $config = false;
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Display the page.
-function lytSectionPage()
+// Create a new section.
+function lytSectionCreate($name, $orderedKey)
 {
-   $page = ""; 
+    global $lytSectionList;
 
-   $page = lytSectionPageLoad();
+    $section = array("Name" => $name, "Key" => $orderedKey);
 
-   print $page;
+    // Find the proper location inside the list.
+    for ($index = 0; $index < count($lytSectionList); $index++)
+    {
+        // new section has a larger key.
+        if ($lytSectionList["Key"] < $section["Key"])
+        {
+            continue;
+        }
+
+        // New section has the exact same key but larger name.
+        if ($lytSectionList["Key"]  == $section["Key"] &&
+            $lytSectionList["Name"] <= $section["Name"])
+        {
+            continue;
+        }
+
+        // Found our location in the list
+        break;
+    }
+
+    // Insert into the list.
+    if ($index != count($lytSectionList))
+    {
+        array_splice($lytSectionList, $index, 0, $section);
+    }
+    // Append onto the list
+    else
+    {
+        array_push($lytSectionList, $section);
+    }
+
+    // Store the new list
+    _SectionStore();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Get a section name
+function lytSectionGet($index)
+{
+    global $lytSectionList;
+
+    $result = array();
+
+    $result["Name"] = $lytSectionList[$index]["Name"];
+    $result["Link"] =
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,15 +96,17 @@ function lytSectionPage()
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// Compose the page.
-function _SectionPageLoad()
+// Save the new section list.
+function _SectionStore()
 {
-   global $lytConfig;
+    $str =
+        "<?php\n" .
+        "\$lytSectionList = array();\n\n";
 
-   $page = lytTemplateLoadPage();
+    for ($index = 0; $index < count($lytSectionList); $index++)
+    {
+        $str .= "\$lytSectionList[" . $index ."] = array(\"Name\" => \"" . $lytSectionList["Name"] . ", \"Key\" => " . $lytSectionList["Key"] . ");\n";
+    }
 
-   $page = lytTemplateReplaceColumnMain($page, "Todo");
-   $page = lytTemplateReplaceCommon(    $page);
-
-   return $page;
+    zFileStoreText(LYT_FILE_NAME_SECTION, $str, true);
 }

@@ -76,8 +76,8 @@ function lytConfigStore()
    
    $lytConfigFileContent = "" . 
       "<?php\n" .
-      "\$lytConfig = array();\n\n".
-      "\$lytConfig[LYT_TAG_IS_CONFIGURED  ] = true;\n\n".
+      "\$lytConfig = array();\n\n" .
+      "\$lytConfig[LYT_TAG_IS_CONFIGURED  ] = true;\n\n" .
       "\$lytConfig[LYT_TAG_FOLDER_FILE    ] = '" . $lytConfig[LYT_TAG_FOLDER_FILE   ] . "';\n" .
       "\$lytConfig[LYT_TAG_FOLDER_IMAGE   ] = '" . $lytConfig[LYT_TAG_FOLDER_IMAGE  ] . "';\n\n" .
       "\$lytConfig[LYT_TAG_ADMIN_COMPANY  ] = '" . $lytConfig[LYT_TAG_ADMIN_COMPANY ] . "';\n" .
@@ -86,8 +86,7 @@ function lytConfigStore()
       "\$lytConfig[LYT_TAG_ADMIN_PASSWORD ] = '" . $lytConfig[LYT_TAG_ADMIN_PASSWORD] . "';\n" .
       "\$lytConfig[LYT_TAG_SITE_NAME      ] = '" . $lytConfig[LYT_TAG_SITE_NAME     ] . "';\n" .
       "\$lytConfig[LYT_TAG_SITE_URL       ] = '" . $lytConfig[LYT_TAG_SITE_URL      ] . "';\n" .
-      "\$lytConfig[LYT_TAG_SITE_URL_SAFE  ] = '" . $lytConfig[LYT_TAG_SITE_URL_SAFE ] . "';\n\n" .
-      "?>\n";
+      "\$lytConfig[LYT_TAG_SITE_URL_SAFE  ] = '" . $lytConfig[LYT_TAG_SITE_URL_SAFE ] . "';\n";
 
    zFileStoreText(LYT_CONFIG_FILE_NAME, $lytConfigFileContent, true);
 }

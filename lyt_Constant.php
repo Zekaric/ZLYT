@@ -23,7 +23,8 @@ SOFTWARE.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants
-define("LYT_CONFIG_FILE_NAME",   "lyt_Config.php");
+define("LYT_FILE_NAME_CONFIG",   "lyt_Config.php");
+define("LYT_FILE_NAME_SECTION",  "lyt_Section.php");
 
 define("LYT_TAG_IS_CONFIGURED",  "lytIsConfigured");
 define("LYT_TAG_IS_USER_ADMIN",  "lytIsUserAdmin");
