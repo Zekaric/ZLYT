@@ -91,7 +91,7 @@ function _AdminPageLoad()
 {
    global $lytConfig;
 
-   $page = lytTemplateLoadPageAdmin();
+   $page = lytPageLoadPage();
 
    $page = str_replace("[AdminCompany]",  $lytConfig[LYT_TAG_ADMIN_COMPANY],  $page);
    $page = str_replace("[AdminName]",     $lytConfig[LYT_TAG_ADMIN_NAME],     $page);

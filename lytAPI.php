@@ -48,6 +48,7 @@ lyt_Constant.php
             LYT_TAG_IS_USER_ADMIN   LYT_TAG_ADMIN_NAME      LYT_TAG_SITE_URL_SAFE
             LYT_TAG_FOLDER_FILE     LYT_TAG_ADMIN_PASSWORD
             LYT_TAG_FOLDER_IMAGE
+            LYT_TAG_SECTION
             LYT_FILE_NAME_CONFIG
             LYT_FILE_NAME_SECTION
 lyt_Section.php
@@ -65,24 +66,29 @@ lytDisplay.php
 lytLogin.php
             Bool        lytLoginIsPasswordGood(                 )
             Bool        lytLoginIsUserAdmin(                    )
+            index       lytLoginGetSection(                     )
             String      lytLoginPage(                           )
                         lytLoginProcess(                        )
+                        lytLoginSetSection(                     index)
                         lytLoginStart(                          )
                         lytLoginStop(                           )
+lytPage.php
+            String      lytPageDefault(                         )
+            String      lytPageGetLoginForm(                    )
+            String      lytPageGetLinkAdmin(                    )
+            String      lytPageGetLinkLogin(                    )
+            String      lytPageLoadPage(                        )
+            String      lytPageLoadPageAdmin(                   )
+            String      lytPageMakeColL(                        link, title)
+            String      lytPageReplaceColumnMain(               page, body)
+            String      lytPageReplaceCommon(                   page)
 lytPost.php
             String      lytPostPage(                            )
                         lytPostProcess(                         )
 lytSection.php
                         lytSectionCreate(                       name, key)
-lytTemplate.php
-            String      lytTemplateGetLoginForm(                )
-            String      lytTemplateGetLinkAdmin(                )
-            String      lytTemplateGetLinkLogin(                )
-            String      lytTemplateLoadPage(                    )
-            String      lytTemplateLoadPageAdmin(               )
-            String      lytTemplateMakeColL(                    link, title)
-            String      lytTemplateReplaceColumnMain(           page, body)
-            String      lytTemplateReplaceCommon(               page)
+            String|""   lytSectionGetName(                      index)
+            String|""   lytSectionGetDir(                       index)
 lytUtil.php
             Bool        lytConnectionIsSecure(                  )
             String|""   lytGetValue(                            key)

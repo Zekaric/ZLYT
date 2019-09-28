@@ -77,7 +77,14 @@ else if ($op == "login")
       exit(0);
    }
 }
+// Change the current section.
+else if ($op == "sectionChange")
+{
+   // Set the current section.
+   lytSectionProcess();
+}
 
 // Default screen.
-print lytSectionPage();
+print lytPageDefault();
+
 exit(0);

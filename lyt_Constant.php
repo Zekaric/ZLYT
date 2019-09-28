@@ -39,3 +39,5 @@ define("LYT_TAG_ADMIN_PASSWORD", "lytAdminPassword");
 define("LYT_TAG_SITE_NAME",      "lytSiteName");
 define("LYT_TAG_SITE_URL",       "lytSiteUrl");
 define("LYT_TAG_SITE_URL_SAFE",  "lytSiteUrlSecure");
+
+define("LYT_TAG_SECTION",        "lytSection");

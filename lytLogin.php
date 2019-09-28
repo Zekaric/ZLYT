@@ -30,12 +30,24 @@ require_once "zHtml.php";
 require_once "lyt_Constant.php";
 require_once "lyt_Config.php";
 
-require_once "lytTemplate.php";
+require_once "lytPage.php";
 
 ////////////////////////////////////////////////////////////////////////////////
 // global
 // function
 ////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////
+// Verify that a password is good.
+function lytLoginIsPasswordGood()
+{
+   if (password_verify($_POST[LYT_TAG_OWNER_PASSWORD], lytConfigGetOwnerPassword()))
+   {
+      return true;
+   }
+
+   return false;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Is the user the admin
@@ -48,6 +60,18 @@ function lytLoginIsUserAdmin()
       return true;
    }
    return false;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Get the section the user is on.
+function lytLoginGetSection()
+{
+   if (isset($_SESSION[LYT_TAG_SECTION]))
+   {
+      return $_SESSION[LYT_TAG_SECTION];
+   }
+   
+   return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,18 +102,6 @@ function lytLoginPage()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Verify that a password is good.
-function lytLoginIsPasswordGood()
-{
-   if (password_verify($_POST[LYT_TAG_OWNER_PASSWORD], lytConfigGetOwnerPassword()))
-   {
-      return true;
-   }
-
-   return false;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // Process the login
 function lytLoginProcess()
 {
@@ -105,6 +117,13 @@ function lytLoginProcess()
    // Todo general user login.
    
    session_write_close();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Set the section
+function lytLoginSetSection($index)
+{
+   $_SESSION[LYT_TAG_SECTION] = $index;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,10 +151,10 @@ function lytLoginStop()
 // Compose the login page.
 function _LoginPageLoad()
 {
-   $page = lytTemplateLoadPage();
+   $page = lytPageLoad();
    
-   $page = lytTemplateReplaceColumnMain($page, lytTemplateGetLoginForm());
-   $page = lytTemplateReplaceCommon(    $page);
+   $page = lytPageReplaceColumnMain($page, lytPageGetLoginForm());
+   $page = lytPageReplaceCommon(    $page);
 
    return $page;
 }

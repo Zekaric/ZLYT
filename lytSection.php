@@ -37,11 +37,11 @@ require_once "lyt_Section.php";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Create a new section.
-function lytSectionCreate($name, $orderedKey)
+function lytSectionCreate($name, $orderedKey, $dirName)
 {
     global $lytSectionList;
 
-    $section = array("Name" => $name, "Key" => $orderedKey);
+    $section = array("Name" => $name, "Key" => $orderedKey, "Dir" => $dirName);
 
     // Find the proper location inside the list.
     for ($index = 0; $index < count($lytSectionList); $index++)
@@ -80,14 +80,45 @@ function lytSectionCreate($name, $orderedKey)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Get a section name
-function lytSectionGet($index)
+function lytSectionGetName($index)
 {
-    global $lytSectionList;
+   global $lytSectionList;
+   
+   if ($index < 0 || count($lytSectionList) <= $index)
+   {
+      return "";
+   }
 
-    $result = array();
+   return $lytSectionList[$index]["Name"];
+}
 
-    $result["Name"] = $lytSectionList[$index]["Name"];
-    $result["Link"] =
+////////////////////////////////////////////////////////////////////////////////
+// Get a section name
+function lytSectionGetDir($index)
+{
+   global $lytSectionList;
+   
+   if ($index < 0 || count($lytSectionList) <= $index)
+   {
+      return "";
+   }
+
+   return "lytSection_" . $lytSectionList[$index]["Dir"];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Process the change in section.
+function lytSectionProcess()
+{
+   global $lytSectionList;
+   
+   for ($index = 0; $index < count($lytSectionList); $index++)
+   {
+      if (lytGetValue("section") == "lytSection_" . $lytSectionList[$index]["Dir"])
+      {
+         lytLoginSetSection($index);
+      }
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,14 +130,17 @@ function lytSectionGet($index)
 // Save the new section list.
 function _SectionStore()
 {
-    $str =
-        "<?php\n" .
-        "\$lytSectionList = array();\n\n";
-
-    for ($index = 0; $index < count($lytSectionList); $index++)
-    {
-        $str .= "\$lytSectionList[" . $index ."] = array(\"Name\" => \"" . $lytSectionList["Name"] . ", \"Key\" => " . $lytSectionList["Key"] . ");\n";
-    }
-
-    zFileStoreText(LYT_FILE_NAME_SECTION, $str, true);
+   $str =
+      "<?php\n" .
+      "\$lytSectionList = array();\n\n";
+   
+   for ($index = 0; $index < count($lytSectionList); $index++)
+   {
+      $str .= "\$lytSectionList[" . $index ."] = array(" . 
+         "\"Name\" => \"" . $lytSectionList[$index]["Name"] . "\", " .
+         "\"Key\"  => \"" . $lytSectionList[$index]["Key"]  . "\", " .
+         "\"Dir\"  => \"" . $lytSectionList[$index]["Dir"]  . "\");\n";
+   }
+   
+   zFileStoreText(LYT_FILE_NAME_SECTION, $str, true);
 }
