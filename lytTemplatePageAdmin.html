@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+ <head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" type="text/css" href="style_reset.css">
+  <link rel="stylesheet" type="text/css" href="lyt_Admin.css">
+  <Title>LYT Admin</Title>
+ </head>
+
+ <body>
+
+  <h1>LYT Admin</h1>
+
+  <form action="lyt.php" method=post>
+   <input type=hidden name=op value=admin />
+
+   <table>
+    <tr><td colspan=2><h2>Admin</h2></td></tr>                                              
+    <tr><td>Company:</td>        <td><input type=text       size=80 name=AdminCompany  value="lytAdminCompany" /></td></tr>                                                         
+    <tr><td>Name:</td>           <td><input type=text       size=80 name=AdminName     value="lytAdminName"    /></td></tr>                                                         
+    <tr><td>Login:</td>          <td><input type=text       size=80 name=AdminLogin    value="lytAdminLogin"   /></td></tr>            
+    <tr><td>Password:</td>       <td><input type=password   size=80 name=AdminPassword value="lytAdminPassword"/></td></tr>   
+
+    <tr><td colspan=2><h2>Site</h2></td></tr>   
+    <tr><td>Name:</td>           <td><input type=text       size=80 name=SiteName      value="lytSiteName"     /></td></tr>         
+    <tr><td>Address:</td>        <td><input type=text       size=80 name=SiteUrl       value="lytSiteUrl"      /></td></tr>
+    <tr><td>Address Secure:</td> <td><input type=text       size=80 name=SiteUrlSafe   value="lytSiteUrlSafe"  /></td></tr>
+
+    <tr><td><input type=submit value="Apply"</td></tr>
+   </table>
+
+  </form>
+ </body>
+</html>

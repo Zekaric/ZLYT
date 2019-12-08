@@ -30,13 +30,14 @@ require_once "lyt_Constant.php";
 require_once "lyt_Config.php";
 require_once "lytLogin.php";
 
-$lytPageColL     = "";
-$lytPageLogin    = "";
-$_pageTemplateSection     = "";
-$lytPagePage     = "";
-$lytPagePost     = "";
-$lytPagePostCode = "";
-$lytPagePostPara = "";
+$_pageTemplate                = "";
+$_pageTemplateColL            = "";
+$_pageTemplateColR            = "";
+$_pageTemplateLogin           = "";
+$_pageTemplateSectionCreate   = "";
+$_pageTemplateSectionListItem = "";
+$_pageTemplateSectionPost     = "";
+$_pageTemplateSectionPostNew  = "";
 
 ///////////////////////////////////////////////////////////////////////////////
 // global
@@ -48,6 +49,8 @@ $lytPagePostPara = "";
 function lytPageDefault()
 {
    $page = lytPageLoad();
+
+   $page = lytPageReplaceColumnMain($page, _BuildSectionPostContent());
    
    $page = lytPageReplaceCommon($page);
 
@@ -58,9 +61,18 @@ function lytPageDefault()
 // Get the login form.
 function lytPageGetLoginForm()
 {
-   global $lytPageLogin;
+   global $_pageTemplateLogin;
    
-   return $lytPageLogin;
+   return $_pageTemplateLogin;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Get the section create form.
+function lytPageGetSectionCreateForm()
+{
+   global $_pageTemplateSectionCreate;
+   
+   return $_pageTemplateSectionCreate;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,7 +81,7 @@ function lytPageGetLinkAdmin()
 {
    global $lytConfig;
    
-   return $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lyt.php?op=admin";
+   return $lytConfig[TAG_LYT_SITE_URL_SAFE] . "/lyt.php?op=admin";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,59 +92,35 @@ function lytPageGetLinkLogin()
    
    if (lytLoginIsUserAdmin())
    {
-      return $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lyt.php?op=logout";
+      return $lytConfig[TAG_LYT_SITE_URL_SAFE] . "/lyt.php?op=logout";
    }
 
-   return $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lyt.php?op=login";
+   return $lytConfig[TAG_LYT_SITE_URL_SAFE] . "/lyt.php?op=login";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Load in the page template file.
 function lytPageLoad()
 {
-   global $lytPageColL     ;
-   global $lytPageLogin    ;
-   global $_pageTemplateSection;
-   global $lytPagePage     ;
-   global $lytPagePost     ;
-   global $lytPagePostCode ;
-   global $lytPagePostPara ;
+   global $_pageTemplate               ;
+   global $_pageTemplateColL           ;
+   global $_pageTemplateColR           ;
+   global $_pageTemplateLogin          ;
+   global $_pageTemplateSectionCreate  ;
+   global $_pageTemplateSectionListItem;
+   global $_pageTemplateSectionPost    ;
+   global $_pageTemplateSectionPostNew ;
    
-   $page = zFileLoadText("lytPage.html", false);
-   
-   $start           = strpos($page, "<!--LoginTemplate{-->", 0);
-   $end             = strpos($page, "<!--}LoginTemplate-->", 0);
-   $lytPageLogin    = str_replace(  "<!--LoginTemplate{-->", "", substr($page, $start, $end - $start));
-   $page            = str_replace(  "<!--}LoginTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-                    
-   $start                = strpos($page, "<!--SectionTemplate{-->", 0);
-   $end                  = strpos($page, "<!--}SectionTemplate-->", 0);
-   $_pageTemplateSection = str_replace(  "<!--SectionTemplate{-->", "", substr($page, $start, $end - $start));
-   $page                 = str_replace(  "<!--}SectionTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-                    
-   $start           = strpos($page, "<!--PostTemplate{-->", 0);
-   $end             = strpos($page, "<!--}PostTemplate-->", 0);
-   $lytPagePost     = str_replace(  "<!--PostTemplate{-->", "", substr($page, $start, $end - $start));
-   $page            = str_replace(  "<!--}PostTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-                    
-   $start           = strpos($page, "<!--PostParaTemplate{-->", 0);
-   $end             = strpos($page, "<!--}PostParaTemplate-->", 0);
-   $lytPagePostPara = str_replace(  "<!--PostParaTemplate{-->", "", substr($page, $start, $end - $start));
-   $page            = str_replace(  "<!--}PostParaTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-                    
-   $start           = strpos($page, "<!--PostCodeTemplate{-->", 0);
-   $end             = strpos($page, "<!--}PostCodeTemplate-->", 0);
-   $lytPagePostCode = str_replace(  "<!--PostCodeTemplate{-->", "", substr($page, $start, $end - $start));
-   $page            = str_replace(  "<!--}PostCodeTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-                    
-   $start           = strpos($page, "<!--ColLTemplate{-->", 0);
-   $end             = strpos($page, "<!--}ColLTemplate-->", 0);
-   $lytPageColL     = str_replace(  "<!--ColLTemplate{-->", "", substr($page, $start, $end - $start));
-   $page            = str_replace(  "<!--}ColLTemplate-->", "", substr($page, 0, $start) . substr($page, $end));
-   
-   $lytPagePage  = $page;
-   
-   return $page;
+   $_pageTemplate                = zFileLoadText("lytTemplatePage.html",            false);
+   $_pageTemplateColL            = zFileLoadText("lytTemplateColL.html",            false);
+   $_pageTemplateColR            = zFileLoadText("lytTemplateColR.html",            false);
+   $_pageTemplateLogin           = zFileLoadText("lytTemplateLogin.html",           false);
+   $_pageTemplateSectionCreate   = zFileLoadText("lytTemplateSectionCreate.html",   false);
+   $_pageTemplateSectionListItem = zFileLoadText("lytTemplateSectionListItem.html", false);
+   $_pageTemplateSectionPost     = zFileLoadText("lytTemplateSectionPost.html",     false);
+   $_pageTemplateSectionPostNew  = zFileLoadText("lytTemplateSectionPostNew.html",  false);
+
+   return $_pageTemplate;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -146,10 +134,10 @@ function lytPageLoadAdmin()
 // Using the col left template.
 function lytPageMakeColL($strLink, $strTitle)
 {
-   global $lytPageColL;
+   global $_pageTemplateColL;
    
-   $result = str_replace("[Link]",  $strLink,  $lytPageColL);
-   $result = str_replace("[Title]", $strTitle, $result);
+   $result = str_replace("lytColLink",  $strLink,  $_pageTemplateColL);
+   $result = str_replace("lytColTitle", $strTitle, $result);
    
    return $result;
 }
@@ -158,7 +146,7 @@ function lytPageMakeColL($strLink, $strTitle)
 // Replace the main part of the page.
 function lytPageReplaceColumnMain($page, $body)
 {
-   return str_replace("[ColMain]", $body, $page);
+   return str_replace("lytColMain", $body, $page);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,13 +166,27 @@ function lytPageReplaceCommon($page)
       $linkAdmin = "<a href='" . lytPageGetLinkAdmin() . "'>Admin</a>";
    }
 
-   $page = str_replace("[LinkLogin]",     $linkLogin,                                     $page);
-   $page = str_replace("[LinkAdmin]",     $linkAdmin,                                     $page);
+   $page = str_replace("lytLinkLogin",    $linkLogin,                                     $page);
+   $page = str_replace("lytLinkAdmin",    $linkAdmin,                                     $page);
    
-   $page = str_replace("lytImage",        $lytConfig[LYT_TAG_SITE_URL_SAFE] . "/lytImage",$page);
-   $page = str_replace("[SiteTitle]",     $lytConfig[LYT_TAG_SITE_NAME],                  $page);
-   $page = str_replace("[SiteUrl]",       $lytConfig[LYT_TAG_SITE_URL],                   $page);
-   $page = str_replace("[SiteUrlSafe]",   $lytConfig[LYT_TAG_SITE_URL_SAFE],              $page);
+   $page = str_replace("lytSiteName",     $lytConfig[TAG_LYT_SITE_TITLE],                 $page);
+   $page = str_replace("lytSiteUrlSafe",  $lytConfig[TAG_LYT_SITE_URL_SAFE],              $page);
+   $page = str_replace("lytSiteUrlPage",  lytGetSiteUrlPage(),                            $page);
+   $page = str_replace("lytSiteUrl",      $lytConfig[TAG_LYT_SITE_URL],                   $page);
+
+   // Blank out if nothing set.
+   $page = str_replace("lytColL",   "", $page);
+   $page = str_replace("lytColR",   "", $page);
+   $page = str_replace("lytFooter", "", $page);
+
+   if (lytConnectionIsSecure())
+   {
+      $page = str_replace("lytImage", $lytConfig[TAG_LYT_SITE_URL_SAFE] . "/lytImage",$page);
+   }
+   else
+   {
+      $page = str_replace("lytImage", $lytConfig[TAG_LYT_SITE_URL] . "/lytImage",$page);
+   }
    
    return $page;
 }
@@ -195,13 +197,67 @@ function lytPageReplaceCommon($page)
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
+// Build the section posts.
+function _BuildSectionPostContent()
+{
+   global $lytConfig;
+   global $_pageTemplateSectionPost;
+   global $_pageTemplateSectionPostNew;
+   
+   $content = "";
+
+   // Add the post form if admin is logged in.
+   if (lytLoginIsUserAdmin())
+   {
+      $content .= $_pageTemplateSectionPostNew;
+   }
+   
+   // Ensure the posts are loaded.
+   lytSectionPostStart();
+   
+   // Display all the posts.
+   for ($index = lytSectionPostGetCount() - 1; ; $index--)
+   {
+      // Get the post information.
+      $title = lytSectionPostGetTitle($index);
+      
+      // If title is "" then there are no more posts.
+      if ($title == "")
+      {
+         break;
+      }
+      
+      $date  = lytSectionPostGetDate( $index);
+      $body  = lytSectionPostGetBody( $index);
+      
+      // Compose the post
+      $post = str_replace("lytSectionPostTitle",  $title,                         $_pageTemplateSectionPost);
+      $post = str_replace("lytSectionPostDate",   $date,                          $post);
+      $post = str_replace("lytSectionPostBody",   $body,                          $post);
+      $post = str_replace("lytSectionPostAuthor", $lytConfig[TAG_LYT_ADMIN_NAME], $post);
+      
+      // Tack it onto the post list.
+      $content .= $post;
+   }
+   
+   return $content;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Replace the Section List
 function _ReplaceSectionList($page)
 {
-   global $_pageTemplateSection;
+   global $lytConfig;
+   global $_pageTemplateSectionListItem;
    
    $sectionListStr = "";
    
+   // Add the create section line if admin is logged in.
+   if (lytLoginIsUserAdmin())
+   {
+      $sectionListStr .= "<a href=\"" . $lytConfig[TAG_LYT_SITE_URL_SAFE] . "/lyt.php?op=sectionCreate\">+ Section</a> - ";
+   }
+
    // For all sections...
    for ($index = 0; ; $index++)
    {
@@ -215,13 +271,13 @@ function _ReplaceSectionList($page)
       }
       
       // Populate the section item string.
-      $sectionItemStr = str_replace("[SectionName]", $name,                    $_pageTemplateSection);
-      $sectionItemStr = str_replace("[SectionDir]",  lytSectionGetDir($index), $sectionItemStr);
+      $sectionItemStr = str_replace("lytSectionName", $name,                    $_pageTemplateSectionListItem);
+      $sectionItemStr = str_replace("lytSectionDir",   lytSectionGetDir($index), $sectionItemStr);
       
       // Append to the section list string.
       $sectionListStr .= $sectionItemStr;
    }
    
    // Replace the place holder with the section list string.
-   return str_replace("[SectionList]", $sectionListStr, $page);
+   return str_replace("lytSectionList", $sectionListStr, $page);
 }

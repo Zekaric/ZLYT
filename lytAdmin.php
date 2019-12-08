@@ -64,17 +64,17 @@ function lytAdminProcess()
 {
    global $lytConfig;
     
-   $lytConfig[LYT_TAG_ADMIN_COMPANY]   = $_POST["AdminCompany"];
-   $lytConfig[LYT_TAG_ADMIN_NAME]      = $_POST["AdminName"];
-   $lytConfig[LYT_TAG_ADMIN_LOGIN]     = $_POST["AdminLogin"];
-   $lytConfig[LYT_TAG_SITE_NAME]       = $_POST["SiteName"];
-   $lytConfig[LYT_TAG_SITE_URL]        = $_POST["SiteUrl"];
-   $lytConfig[LYT_TAG_SITE_URL_SAFE]   = $_POST["SiteUrlSafe"];
+   $lytConfig[TAG_LYT_ADMIN_COMPANY]   = $_POST["AdminCompany"];
+   $lytConfig[TAG_LYT_ADMIN_NAME]      = $_POST["AdminName"];
+   $lytConfig[TAG_LYT_ADMIN_LOGIN]     = $_POST["AdminLogin"];
+   $lytConfig[TAG_LYT_SITE_TITLE]      = $_POST["SiteName"];
+   $lytConfig[TAG_LYT_SITE_URL]        = $_POST["SiteUrl"];
+   $lytConfig[TAG_LYT_SITE_URL_SAFE]   = $_POST["SiteUrlSafe"];
 
    // Setting a new password.
    if ($_POST["AdminPassword"] != "")
    {
-      $lytConfig[LYT_TAG_ADMIN_PASSWORD] = password_hash($_POST["AdminPassword"], PASSWORD_DEFAULT);
+      $lytConfig[TAG_LYT_ADMIN_PASSWORD] = password_hash($_POST["AdminPassword"], PASSWORD_DEFAULT);
    }
 
    lytConfigStore();
@@ -93,13 +93,13 @@ function _AdminPageLoad()
 
    $page = lytPageLoadPage();
 
-   $page = str_replace("[AdminCompany]",  $lytConfig[LYT_TAG_ADMIN_COMPANY],  $page);
-   $page = str_replace("[AdminName]",     $lytConfig[LYT_TAG_ADMIN_NAME],     $page);
-   $page = str_replace("[AdminLogin]",    $lytConfig[LYT_TAG_ADMIN_LOGIN],    $page);
-   $page = str_replace("[AdminPassword]", "",                                 $page);
-   $page = str_replace("[SiteName]",      $lytConfig[LYT_TAG_SITE_NAME],      $page);
-   $page = str_replace("[SiteUrl]",       $lytConfig[LYT_TAG_SITE_URL],       $page);
-   $page = str_replace("[SiteUrlSafe]",   $lytConfig[LYT_TAG_SITE_URL_SAFE],  $page);
+   $page = str_replace("lytAdminCompany",  $lytConfig[TAG_LYT_ADMIN_COMPANY],  $page);
+   $page = str_replace("lytAdminName",     $lytConfig[TAG_LYT_ADMIN_NAME],     $page);
+   $page = str_replace("lytAdminLogin",    $lytConfig[TAG_LYT_ADMIN_LOGIN],    $page);
+   $page = str_replace("lytAdminPassword", "",                                 $page);
+   $page = str_replace("lytSiteName",      $lytConfig[TAG_LYT_SITE_NAME],      $page);
+   $page = str_replace("lytSiteUrl",       $lytConfig[TAG_LYT_SITE_URL],       $page);
+   $page = str_replace("lytSiteUrlSafe",   $lytConfig[TAG_LYT_SITE_URL_SAFE],  $page);
 
    return $page;
 }

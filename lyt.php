@@ -47,11 +47,12 @@ require_once "lytUtil.php";
 ///////////////////////////////////////////////////////////////////////////////
 // The main page for the program.
 
-// Only start the session when things are secure.
+// This will only start a web session when things are secure.
 lytLoginStart();
 
 // What are we wanting to do.
-$op = lytGetValue("op");
+$isFormPage = false;
+$op         = lytGetValue("op");
 
 // Admin page
 if      (!lytIsConfigured() ||
@@ -70,18 +71,35 @@ else if ($op == "logout")
 // Login page
 else if ($op == "login")
 {
-   $page = lytLoginPage();
-   if ($page != "")
-   {
-      print $page;
-      exit(0);
-   }
+   $isFormPage = true;
+   $page       = lytLoginPage();
 }
 // Change the current section.
 else if ($op == "sectionChange")
 {
    // Set the current section.
-   lytSectionProcess();
+   lytSectionChangeProcess();
+}
+// Create a new section.
+else if ($op == "sectionCreate")
+{
+   $isFormPage = true;
+   $page       = lytSectionCreatePage();
+}
+// Add a new post to the section
+else if ($op == "sectionPostCreate")
+{
+   lytSectionPostCreateProcess();
+}
+
+// If this is a form page then we have different behaviour.
+if ($isFormPage)
+{
+   if ($page != "")
+   {
+      print $page;
+      exit(0);
+   }
 }
 
 // Default screen.

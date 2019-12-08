@@ -43,11 +43,11 @@ var _contentTemplate =
 
 var _postTemplate = 
    " <tr>\n"
-   "  <td class=contentTitle colspan=2><a href='" + [link] + "'>[title]</a></td>\n" +
+   "  <td class=contentTitle colspan=2><a href='lytColLink'>lytColTitle</a></td>\n" +
    " </tr><tr>\n" +
-   "  <td class=contentAuth>[auth]</td><td class=contentDate>[date]</td>" +
+   "  <td class=contentAuth>lytColAuthor</td><td class=contentDate>lytColDate</td>" +
    " </tr><tr>\n" +
-   "  <td class=contentText colspan=2>[body]</td>\n" +
+   "  <td class=contentText colspan=2>lytColBody</td>\n" +
    " </tr>\n";
 
 var _commTemplate = "";
@@ -117,11 +117,11 @@ function DisplayContentPostList()
       // Prepare the post.
       stemp = _postTemplate;
       
-      stemp = stemp.replace(/[link]/g,  link);
-      stemp = stemp.replace(/[title]/g, _postTitle[postIndex + index]);
-      stemp = stemp.replace(/[auth]/g,  _postAuth[ postIndex + index]);
-      stemp = stemp.replace(/[date]/g,  _postDate[ postIndex + index]);
-      stemp = stemp.replace(/[body]/g,  HtmlFromBody(_postBody[ postIndex + index]));
+      stemp = stemp.replace(/lytColLink/g,   link);
+      stemp = stemp.replace(/lytColTitle/g,  _postTitle[postIndex + index]);
+      stemp = stemp.replace(/lytColAuthor/g, _postAuth[ postIndex + index]);
+      stemp = stemp.replace(/lytColDate/g,   _postDate[ postIndex + index]);
+      stemp = stemp.replace(/lytColBody/g,   HtmlFromBody(_postBody[ postIndex + index]));
       
       contentPost += stemp;
    }

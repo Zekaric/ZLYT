@@ -41,7 +41,7 @@ function lytIsConfigured()
 {
    global $lytConfig;
    
-   return $lytConfig[LYT_TAG_IS_CONFIGURED];
+   return $lytConfig[TAG_LYT_IS_CONFIGURED];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ function lytConfigChangeImageFolder()
    
    // Rename the image folder.
    rename($imageFolderOld, $imageFolderNew);
-   $lytConfig[LYT_TAG_FOLDER_IMAGE] = $imageFolderNew;
+   $lytConfig[TAG_LYT_FOLDER_IMAGE] = $imageFolderNew;
    
    // Update the config file.
    lytConfigStore();
@@ -77,16 +77,16 @@ function lytConfigStore()
    $lytConfigFileContent = "" . 
       "<?php\n" .
       "\$lytConfig = array();\n\n" .
-      "\$lytConfig[LYT_TAG_IS_CONFIGURED  ] = true;\n\n" .
-      "\$lytConfig[LYT_TAG_FOLDER_FILE    ] = '" . $lytConfig[LYT_TAG_FOLDER_FILE   ] . "';\n" .
-      "\$lytConfig[LYT_TAG_FOLDER_IMAGE   ] = '" . $lytConfig[LYT_TAG_FOLDER_IMAGE  ] . "';\n\n" .
-      "\$lytConfig[LYT_TAG_ADMIN_COMPANY  ] = '" . $lytConfig[LYT_TAG_ADMIN_COMPANY ] . "';\n" .
-      "\$lytConfig[LYT_TAG_ADMIN_LOGIN    ] = '" . $lytConfig[LYT_TAG_ADMIN_LOGIN   ] . "';\n" .
-      "\$lytConfig[LYT_TAG_ADMIN_NAME     ] = '" . $lytConfig[LYT_TAG_ADMIN_NAME    ] . "';\n" .
-      "\$lytConfig[LYT_TAG_ADMIN_PASSWORD ] = '" . $lytConfig[LYT_TAG_ADMIN_PASSWORD] . "';\n" .
-      "\$lytConfig[LYT_TAG_SITE_NAME      ] = '" . $lytConfig[LYT_TAG_SITE_NAME     ] . "';\n" .
-      "\$lytConfig[LYT_TAG_SITE_URL       ] = '" . $lytConfig[LYT_TAG_SITE_URL      ] . "';\n" .
-      "\$lytConfig[LYT_TAG_SITE_URL_SAFE  ] = '" . $lytConfig[LYT_TAG_SITE_URL_SAFE ] . "';\n";
+      "\$lytConfig[TAG_LYT_IS_CONFIGURED  ] = true;\n\n" .
+      "\$lytConfig[TAG_LYT_FOLDER_FILE    ] = '" . $lytConfig[TAG_LYT_FOLDER_FILE   ] . "';\n" .
+      "\$lytConfig[TAG_LYT_FOLDER_IMAGE   ] = '" . $lytConfig[TAG_LYT_FOLDER_IMAGE  ] . "';\n\n" .
+      "\$lytConfig[TAG_LYT_ADMIN_COMPANY  ] = '" . $lytConfig[TAG_LYT_ADMIN_COMPANY ] . "';\n" .
+      "\$lytConfig[TAG_LYT_ADMIN_LOGIN    ] = '" . $lytConfig[TAG_LYT_ADMIN_LOGIN   ] . "';\n" .
+      "\$lytConfig[TAG_LYT_ADMIN_NAME     ] = '" . $lytConfig[TAG_LYT_ADMIN_NAME    ] . "';\n" .
+      "\$lytConfig[TAG_LYT_ADMIN_PASSWORD ] = '" . $lytConfig[TAG_LYT_ADMIN_PASSWORD] . "';\n" .
+      "\$lytConfig[TAG_LYT_SITE_TITLE     ] = '" . $lytConfig[TAG_LYT_SITE_TITLE    ] . "';\n" .
+      "\$lytConfig[TAG_LYT_SITE_URL       ] = '" . $lytConfig[TAG_LYT_SITE_URL      ] . "';\n" .
+      "\$lytConfig[TAG_LYT_SITE_URL_SAFE  ] = '" . $lytConfig[TAG_LYT_SITE_URL_SAFE ] . "';\n";
 
    zFileStoreText(LYT_CONFIG_FILE_NAME, $lytConfigFileContent, true);
 }

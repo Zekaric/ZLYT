@@ -21,6 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
+///////////////////////////////////////////////////////////////////////////////
+// includes
+require_once "lyt_Constant.php";
+require_once "lyt_Config.php";
+
 ////////////////////////////////////////////////////////////////////////////////
 // global
 // function
@@ -39,6 +44,27 @@ function lytConnectionIsSecure()
    return false;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Get the site url based on whether it should be the safe url or not.
+function lytGetSiteUrl()
+{
+   global $lytConfig;
+   
+   if (lytConnectionIsSecure())
+   {
+      return $lytConfig[TAG_LYT_SITE_URL_SAFE];
+   }
+   
+   return $lytConfig[TAG_LYT_SITE_URL];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Get the page url for the site.  Will usually be always the same.
+function lytGetSiteUrlPage()
+{
+   return lytGetSiteUrl() . "/lyt.php";
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Get a URL value.
 function lytGetValue($key)
@@ -46,8 +72,14 @@ function lytGetValue($key)
    // Check the _GET (in URL) if there is a value...
    // If not, check the _POST if there is value...
    // If not then "" 
-   return 
-      (isset($_GET[$key]) ? 
-         $_GET[$key]      : 
-         (isset($_POST["op"]) ? $_POST["op"] : ""));
+   if      (isset($_GET[$key]))
+   {
+      return $_GET[$key];
+   }
+   else if (isset($_POST[$key]))
+   {
+      return $_POST[$key];
+   }
+
+   return "";
 }

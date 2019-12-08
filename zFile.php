@@ -58,66 +58,87 @@ function zDirIsExisting($dirName)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Append to a file
+function zFileAppendText($fileName, $string, $isLocking)
+{
+   // Open the file.
+   $fileCon = zFileConnect($fileName, "a", $isLocking);
+   if (!zFileConnectIsGood($fileCon))
+   {
+      return false; // "zFileStore: ERROR: Unable to open file '" . $fileName . "' for writing.";
+   }
+
+   // Write the file contents.
+   fwrite($fileCon["file"], $string);
+   
+   // Close the file.
+   zFileDisconnect($fileCon);
+
+   return true;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Open a file.
 function zFileConnect($file, $mode, $isLocking)
 {
-   $fp = array();
+   $fileCon = array();
 
-   $fp["name"]       = $file;
-   $fp["isLocking"]  = $isLocking;
-   $fp["lock"]       = "";
-   $fp["file"]       = false;
+   $fileCon["name"]       = $file;
+   $fileCon["isLocking"]  = $isLocking;
+   $fileCon["lock"]       = "";
+   $fileCon["file"]       = false;
 
    if ($isLocking)
    {
-      $fp["lock"] = zLockCreateFile($file);
-      if ($fp["lock"] == "")
+      $fileCon["lock"] = zLockCreateFile($file);
+      if ($fileCon["lock"] == "")
       {
-         if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fp);
-         return $fp;
+         if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fileCon);
+         return $fileCon;
       }
    }
 
-   $fp["file"] = fopen($file, $mode);
+   $fileCon["file"] = fopen($file, $mode);
    
    // File open failed.
-   if (!$fp["file"])
+   if (!$fileCon["file"])
    {
       if ($isLocking)
       {
          // Clean up
-         zLockDestroy($fp["lock"]);
+         zLockDestroy($fileCon["lock"]);
       }
-      $fp["file"] = false;
+      $fileCon["file"] = false;
    }
    
-   if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fp);
-   return $fp;
+   if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fileCon);
+   return $fileCon;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Check to see if the file open succeeded.
-function zFileConnectIsGood($fp)
+function zFileConnectIsGood($fileCon)
 {
-   return ($fp["file"] != false);
+   return ($fileCon["file"] != false);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Close the open file.
-function zFileDisconnect($fp)
+function zFileDisconnect($fileCon)
 {
-   if ($fp["file"] != false)
+   if ($fileCon["file"] != false)
    {
-      fclose($fp["file"]);
+      fclose($fileCon["file"]);
 
-      if ($fp["isLocking"] &&
-          $fp["lock"] != "")
+      if ($fileCon["isLocking"] &&
+          $fileCon["lock"] != "")
       {
-         zLockDestroy($fp["lock"]);
+         zLockDestroy($fileCon["lock"]);
       }
       
-      $fp["lock"] = "";
-      $fp["file"] = false;
+      $fileCon["lock"] = "";
+      $fileCon["file"] = false;
    }
 }
 
@@ -135,8 +156,8 @@ function zFileLoadText($fileName, $isLocking)
    $text = "";
    
    // Open the file.
-   $fp = zFileConnect($fileName, "r", $isLocking);
-   if (!zFileConnectIsGood($fp))
+   $fileCon = zFileConnect($fileName, "r", $isLocking);
+   if (!zFileConnectIsGood($fileCon))
    {
 	   return "zFileLoad: ERROR: Unable to open file '" . $fileName . "' for reading.";
    }
@@ -144,7 +165,7 @@ function zFileLoadText($fileName, $isLocking)
    // Read in the file contents.
    while (true)
    {
-      $line = fgets($fp["file"]);
+      $line = fgets($fileCon["file"]);
       if ($line == false)
       {
          break;
@@ -154,7 +175,7 @@ function zFileLoadText($fileName, $isLocking)
    }
       
    // Close the file.
-   zFileDisconnect($fp);
+   zFileDisconnect($fileCon);
    
    // Return the file contents.
    return $text;
@@ -167,8 +188,8 @@ function zFileLoadTextArray($fileName, $isLocking)
    $lineArray = array();
    
    // Open the file.
-   $fp = zFileConnect($fileName, "r", $isLocking);
-   if (!zFileConnectIsGood($fp))
+   $fileCon = zFileConnect($fileName, "r", $isLocking);
+   if (!zFileConnectIsGood($fileCon))
    {
 	   return "zFileLoad: ERROR: Unable to open file '" . $fileName . "' for reading.";
    }
@@ -176,7 +197,7 @@ function zFileLoadTextArray($fileName, $isLocking)
    // Read in the file contents.
    while (true)
    {
-      $line = fgets($fp["file"]);
+      $line = fgets($fileCon["file"]);
       if ($line == false)
       {
          break;
@@ -186,7 +207,7 @@ function zFileLoadTextArray($fileName, $isLocking)
    }
       
    // Close the file.
-   zFileClose($fileName, $fp, $lock);
+   zFileClose($fileName, $fileCon, $lock);
    
    // Return the array of lines.
    return $lineArray;
@@ -197,17 +218,17 @@ function zFileLoadTextArray($fileName, $isLocking)
 function zFileStoreText($fileName, $string, $isLocking)
 {
    // Open the file.
-   $fp = zFileConnect($fileName, "w", $isLocking);
-   if (!zFileConnectIsGood($fp))
+   $fileCon = zFileConnect($fileName, "w", $isLocking);
+   if (!zFileConnectIsGood($fileCon))
    {
       return false; // "zFileStore: ERROR: Unable to open file '" . $fileName . "' for writing.";
    }
 
    // Write the file contents.
-   fwrite($fp["file"], $string);
+   fwrite($fileCon["file"], $string);
    
    // Close the file.
-   zFileDisconnect($fp);
+   zFileDisconnect($fileCon);
 
    return true;
 }
@@ -217,8 +238,8 @@ function zFileStoreText($fileName, $string, $isLocking)
 function zFileStoreTextArray($fileName, $lineArray, $isLocking)
 {
    // Open the file.
-   $fp = zFileConnect($fileName, "w", $isLocking);
-   if (!zFileConnectIsGood($fp))
+   $fileCon = zFileConnect($fileName, "w", $isLocking);
+   if (!zFileConnectIsGood($fileCon))
    {
       return false; // "zFileStore: ERROR: Unable to open file '" . $fileName . "' for writing.";
    }
@@ -227,11 +248,21 @@ function zFileStoreTextArray($fileName, $lineArray, $isLocking)
    $lineCount = count($lineArray);
    for ($index = 0; $index < $lineCount; $index++)
    {
-      fwrite($fp["file"], $lineArray[$index] . "\n");
+      fwrite($fileCon["file"], $lineArray[$index] . "\n");
    }
       
    // Close the file.
-   zFileDisconnect($fp);
+   zFileDisconnect($fileCon);
+
+   return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Store the file contents from a single string.
+function zFileWriteText($fileCon, $string)
+{
+   // Write the file contents.
+   fwrite($fileCon["file"], $string);
 
    return true;
 }

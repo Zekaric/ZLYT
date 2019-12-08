@@ -43,12 +43,12 @@ lyt.php
 lyt_Config.php
             $lytConfig[]
 lyt_Constant.php
-            LYT_CONFIG_FILE_NAME    LYT_TAG_ADMIN_COMPANY   LYT_TAG_SITE_NAME  
-            LYT_TAG_IS_CONFIGURED   LYT_TAG_ADMIN_LOGIN     LYT_TAG_SITE_URL
-            LYT_TAG_IS_USER_ADMIN   LYT_TAG_ADMIN_NAME      LYT_TAG_SITE_URL_SAFE
-            LYT_TAG_FOLDER_FILE     LYT_TAG_ADMIN_PASSWORD
-            LYT_TAG_FOLDER_IMAGE
-            LYT_TAG_SECTION
+            LYT_CONFIG_FILE_NAME    TAG_LYT_ADMIN_COMPANY   TAG_LYT_SITE_NAME  
+            TAG_LYT_IS_CONFIGURED   TAG_LYT_ADMIN_LOGIN     TAG_LYT_SITE_URL
+            TAG_LYT_IS_USER_ADMIN   TAG_LYT_ADMIN_NAME      TAG_LYT_SITE_URL_SAFE
+            TAG_LYT_FOLDER_FILE     TAG_LYT_ADMIN_PASSWORD
+            TAG_LYT_FOLDER_IMAGE
+            TAG_LYT_SECTION
             LYT_FILE_NAME_CONFIG
             LYT_FILE_NAME_SECTION
 lyt_Section.php
@@ -67,6 +67,7 @@ lytLogin.php
             Bool        lytLoginIsPasswordGood(                 )
             Bool        lytLoginIsUserAdmin(                    )
             index       lytLoginGetSection(                     )
+            String      lytLoginGetSiteUrl(                     )
             String      lytLoginPage(                           )
                         lytLoginProcess(                        )
                         lytLoginSetSection(                     index)
@@ -89,6 +90,10 @@ lytSection.php
                         lytSectionCreate(                       name, key)
             String|""   lytSectionGetName(                      index)
             String|""   lytSectionGetDir(                       index)
+            String|""   lytSectionGetPostBody(                  postBody)
+            String|""   lytSectionGetPostDate(                  postIndex)
+            String|""   lytSectionGetPostTitle(                 postIndex)
+                        lytSectionGetPostStart(                 )
 lytUtil.php
             Bool        lytConnectionIsSecure(                  )
             String|""   lytGetValue(                            key)

@@ -41,7 +41,7 @@ require_once "lytPage.php";
 // Verify that a password is good.
 function lytLoginIsPasswordGood()
 {
-   if (password_verify($_POST[LYT_TAG_OWNER_PASSWORD], lytConfigGetOwnerPassword()))
+   if (password_verify($_POST[TAG_LYT_OWNER_PASSWORD], lytConfigGetOwnerPassword()))
    {
       return true;
    }
@@ -54,8 +54,8 @@ function lytLoginIsPasswordGood()
 function lytLoginIsUserAdmin()
 {
    if (lytConnectionIsSecure()                 &&
-       isset($_SESSION[LYT_TAG_IS_USER_ADMIN]) &&
-       $_SESSION[LYT_TAG_IS_USER_ADMIN])
+       isset($_SESSION[TAG_LYT_IS_USER_ADMIN]) &&
+       $_SESSION[TAG_LYT_IS_USER_ADMIN])
    {
       return true;
    }
@@ -66,9 +66,9 @@ function lytLoginIsUserAdmin()
 // Get the section the user is on.
 function lytLoginGetSection()
 {
-   if (isset($_SESSION[LYT_TAG_SECTION]))
+   if (isset($_SESSION[TAG_LYT_SECTION]))
    {
-      return $_SESSION[LYT_TAG_SECTION];
+      return $_SESSION[TAG_LYT_SECTION];
    }
    
    return 0;
@@ -89,7 +89,6 @@ function lytLoginPage()
    // Post verify password.
    if ($_SERVER['REQUEST_METHOD'] == 'POST')
    {
-      zDebugPrint("Login Process");
       lytLoginProcess();
    }      
    // Display lytLogin form.
@@ -108,11 +107,11 @@ function lytLoginProcess()
    global $lytConfig;
    
    // Check if this is the admin.
-   $_SESSION[LYT_TAG_IS_USER_ADMIN] = false;
-   if ($_POST["LoginName"] === $lytConfig[LYT_TAG_ADMIN_LOGIN] &&
-       password_verify($_POST["LoginPassword"], $lytConfig[LYT_TAG_ADMIN_PASSWORD]))
+   $_SESSION[TAG_LYT_IS_USER_ADMIN] = false;
+   if ($_POST["LoginName"] === $lytConfig[TAG_LYT_ADMIN_LOGIN] &&
+       password_verify($_POST["LoginPassword"], $lytConfig[TAG_LYT_ADMIN_PASSWORD]))
    {
-      $_SESSION[LYT_TAG_IS_USER_ADMIN] = true;
+      $_SESSION[TAG_LYT_IS_USER_ADMIN] = true;
    }
    // Todo general user login.
    
@@ -123,7 +122,7 @@ function lytLoginProcess()
 // Set the section
 function lytLoginSetSection($index)
 {
-   $_SESSION[LYT_TAG_SECTION] = $index;
+   $_SESSION[TAG_LYT_SECTION] = $index;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

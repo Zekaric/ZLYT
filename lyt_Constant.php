@@ -23,21 +23,22 @@ SOFTWARE.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants
-define("LYT_FILE_NAME_CONFIG",   "lyt_Config.php");
-define("LYT_FILE_NAME_SECTION",  "lyt_Section.php");
+define("LYT_FILE_NAME_CONFIG",            "lyt_Config.php");
+define("LYT_FILE_NAME_SECTION",           "lyt_Section.php");
+define("LYT_FILE_NAME_SECTION_POST_PRE",  "lyt_Section_");
 
-define("LYT_TAG_IS_CONFIGURED",  "lytIsConfigured");
-define("LYT_TAG_IS_USER_ADMIN",  "lytIsUserAdmin");
+define("TAG_LYT_IS_CONFIGURED",           "lytIsConfigured");
+define("TAG_LYT_IS_USER_ADMIN",           "lytIsUserAdmin");
 
-define("LYT_TAG_FOLDER_FILE",    "lytFolderFile");
-define("LYT_TAG_FOLDER_IMAGE",   "lytFolderImage");
+define("TAG_LYT_FOLDER_FILE",             "lytFolderFile");
+define("TAG_LYT_FOLDER_IMAGE",            "lytFolderImage");
 
-define("LYT_TAG_ADMIN_COMPANY",  "lytAdminCompany");
-define("LYT_TAG_ADMIN_LOGIN",    "lytAdminLogin");
-define("LYT_TAG_ADMIN_NAME",     "lytAdminName");
-define("LYT_TAG_ADMIN_PASSWORD", "lytAdminPassword");
-define("LYT_TAG_SITE_NAME",      "lytSiteName");
-define("LYT_TAG_SITE_URL",       "lytSiteUrl");
-define("LYT_TAG_SITE_URL_SAFE",  "lytSiteUrlSecure");
+define("TAG_LYT_ADMIN_COMPANY",           "lytAdminCompany");
+define("TAG_LYT_ADMIN_LOGIN",             "lytAdminLogin");
+define("TAG_LYT_ADMIN_NAME",              "lytAdminName");
+define("TAG_LYT_ADMIN_PASSWORD",          "lytAdminPassword");
+define("TAG_LYT_SITE_TITLE",              "lytSiteName");
+define("TAG_LYT_SITE_URL",                "lytSiteUrl");
+define("TAG_LYT_SITE_URL_SAFE",           "lytSiteUrlSecure");
 
-define("LYT_TAG_SECTION",        "lytSection");
+define("TAG_LYT_SECTION",                 "lytSection");

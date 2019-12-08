@@ -28,20 +28,9 @@ h1.lytPost
    padding:             0.2rem;
 }
 
-h2.lytPost
+h1.lytPostSub
 {
-   font-size:           1.0rem;
-   background-color:    black;
-   color:               white;
-   padding:             0.2rem;
-}
-
-h2.lytPostRight
-{
-   font-size:           1.0rem;
-   text-align:          right;
-   background-color:    black;
-   color:               white;
+   font-size:           0.75rem;
    padding:             0.2rem;
 }
 
@@ -80,6 +69,7 @@ a.lytTitle
 table
 {
    width:               100%;
+   //border:              1px solid black;
 }
 
 td.lytColumnL, td.lytColumnR 
