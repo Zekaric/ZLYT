@@ -67,7 +67,7 @@ function lytAdminProcess()
    $lytConfig[TAG_LYT_ADMIN_COMPANY]   = $_POST["AdminCompany"];
    $lytConfig[TAG_LYT_ADMIN_NAME]      = $_POST["AdminName"];
    $lytConfig[TAG_LYT_ADMIN_LOGIN]     = $_POST["AdminLogin"];
-   $lytConfig[TAG_LYT_SITE_TITLE]      = $_POST["SiteName"];
+   $lytConfig[TAG_LYT_SITE_NAME]       = $_POST["SiteName"];
    $lytConfig[TAG_LYT_SITE_URL]        = $_POST["SiteUrl"];
    $lytConfig[TAG_LYT_SITE_URL_SAFE]   = $_POST["SiteUrlSafe"];
 
@@ -91,15 +91,15 @@ function _AdminPageLoad()
 {
    global $lytConfig;
 
-   $page = lytPageLoadPage();
+   $page = lytPageLoadAdmin();
 
    $page = str_replace("lytAdminCompany",  $lytConfig[TAG_LYT_ADMIN_COMPANY],  $page);
    $page = str_replace("lytAdminName",     $lytConfig[TAG_LYT_ADMIN_NAME],     $page);
    $page = str_replace("lytAdminLogin",    $lytConfig[TAG_LYT_ADMIN_LOGIN],    $page);
    $page = str_replace("lytAdminPassword", "",                                 $page);
    $page = str_replace("lytSiteName",      $lytConfig[TAG_LYT_SITE_NAME],      $page);
-   $page = str_replace("lytSiteUrl",       $lytConfig[TAG_LYT_SITE_URL],       $page);
    $page = str_replace("lytSiteUrlSafe",   $lytConfig[TAG_LYT_SITE_URL_SAFE],  $page);
+   $page = str_replace("lytSiteUrl",       $lytConfig[TAG_LYT_SITE_URL],       $page);
 
    return $page;
 }

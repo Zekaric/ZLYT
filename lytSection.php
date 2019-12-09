@@ -134,6 +134,32 @@ function lytSectionCreateProcess()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Display the section Post create
+function lytSectionPostCreatePage()
+{
+   // Not using the secure address.
+   if (!lytConnectionIsSecure())
+   {
+      return "";
+   }
+
+   $page = "";
+   
+   // Post verify password.
+   if ($_SERVER['REQUEST_METHOD'] == 'POST')
+   {
+      lytSectionPostCreateProcess();
+   }      
+   // Display lytLogin form.
+   else
+   {
+      $page = _SectionPostCreatePageLoad();
+   }
+
+   return $page;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Get the number of sections.
 function lytSectionGetCount()
 {
@@ -247,7 +273,7 @@ function lytSectionPostCreateProcess()
    $date  = date("Y-m-d H:i T");
 
    $index = count($lytSectionPostList);
-   
+
    $lytSectionPostList[$index] = array(
       "Title" => _ToSafeString($title, true),
       "Date"  => $date,
@@ -295,6 +321,18 @@ function _SectionCreatePageLoad()
    $page = lytPageLoad();
    
    $page = lytPageReplaceColumnMain($page, lytPageGetSectionCreateForm());
+   $page = lytPageReplaceCommon(    $page);
+
+   return $page;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Compose the section post create page.
+function _SectionPostCreatePageLoad()
+{
+   $page = lytPageLoad();
+   
+   $page = lytPageReplaceColumnMain($page, lytPageGetSectionPostCreateForm());
    $page = lytPageReplaceCommon(    $page);
 
    return $page;
@@ -350,7 +388,8 @@ function _SectionPostStoreAppend()
    $str = "\$lytSectionPostList[" . $index . "] = array(" .
       "\"Title\" => \"" . $lytSectionPostList[$index]["Title"] . "\", " .
       "\"Date\"  => \"" . $lytSectionPostList[$index]["Date"]  . "\", " .
-      "\"Body\"  => \"" . $lytSectionPostList[$index]["Body"]  . "\");\n";
+      "\"Body\"  => <<<END\n" .
+      $lytSectionPostList[$index]["Body"]  . "\nEND\n);\n";
    
    zFileAppendText(_GetPostFile($sectionIndex), $str, true);
 }
@@ -360,22 +399,227 @@ function _SectionPostStoreAppend()
 // Convert the paragraphing to html
 function _ToSafeString($string, $isTitle)
 {
-   $result = str_replace("\"",       "&quot;",   $string);
-   $result = str_replace("\'",       "&apos;",   $result);
-   $result = str_replace("\$",       "&#36;",    $result);
-   $result = str_replace("\\",       "&#92;",    $result);
-   $result = str_replace("/",        "&#47;",    $result);
-   $result = str_replace("[c]",      "&copy;",   $result);
-   $result = str_replace("[r]",      "&reg;",    $result);
-   $result = str_replace("[yen]",    "&yen;",    $result);
-   $result = str_replace("[dollar]", "&#36;",    $result);
-   $result = str_replace("[cent]",   "&cent;",   $result);
-   $result = str_replace("[pound]",  "&pound;",  $result);
-
+   $result = str_replace("\"",       "&quot;",    $string);
+   $result = str_replace("\'",       "&apos;",    $result);
+   $result = str_replace("\$",       "&#36;",     $result);
+   $result = str_replace("\\",       "&#92;",     $result);
+   $result = str_replace("/",        "&#47;",     $result);
+   $result = str_replace("<",        "&lt;",      $result);
+   $result = str_replace(">",        "&gt;",      $result);
+   $result = str_replace("[-]",      "&nbsp;",    $result);
+   $result = str_replace("[c]",      "&copy;",    $result);
+   $result = str_replace("[r]",      "&reg;",     $result);
+   $result = str_replace("[yen]",    "&yen;",     $result);
+   $result = str_replace("[dollar]", "&#36;",     $result);
+   $result = str_replace("[cent]",   "&cent;",    $result);
+   $result = str_replace("[pound]",  "&pound;",   $result);
+   $result = str_replace("[b-]",     "<strong>",  $result);
+   $result = str_replace("[-b]",     "</strong>", $result);
+   $result = str_replace("[i-]",     "<em>",      $result);
+   $result = str_replace("[-i]",     "</em>",     $result);
+   $result = str_replace("[^-]",     "<sup>",     $result);
+   $result = str_replace("[-^]",     "</sup>",    $result);
+   $result = str_replace("[v-]",     "<sub>",     $result);
+   $result = str_replace("[-v]",     "</sub>",    $result);
+   $result = str_replace("[c-]",     "<center>",  $result);
+   $result = str_replace("[-c]",     "</center>", $result);
+   $result = str_replace("[ret]",    "<br />\n",  $result);
+   $result = str_replace("\r",       "",          $result);
    if ($isTitle)
    {
       $result = str_replace(" ",        "&nbsp;",   $result);
    }
 
-   return $result;
+   $result = str_replace("[img-]",   "<img src=\"lytImage/", $result);
+   $result = str_replace("[-img]",   "\"/>",                 $result);
+
+   // Get rid of leading and trailing whitespace;
+   $result = trim($result);
+
+   if ($isTitle)
+   {
+      // Paragraph stuff below is not applicable for titles.
+      return $result;
+   }
+      
+   $level     = 0;
+   $isInPara  = false;
+   $isNewPara = false;
+   $scount    = strlen($result);
+   $newResult = "";
+
+   for ($index = 0; $index < $scount; $index++)
+   {
+      // Get the next letter.
+      $letter = substr($result, $index, 1);
+
+      // if the next letter is a start of a paragraph style...
+      if ($letter == "[")
+      {
+         $tokenSmall = substr($result, $index, 4);
+         $tokenLarge = substr($result, $index, 7);
+
+         // Terminate the paragraph.
+         if ($isInPara)
+         {
+            $newResult .= "</p>";
+            $isInPara   = false;
+         }
+
+         // starting a bullet list...
+         if      ($tokenSmall == "[*-]")
+         {
+            $newResult .= "<ul class=\"lytStylePostBody\">";
+            $index     += 3;
+            $level++;
+         }
+         // ending a bullet list...
+         else if ($tokenSmall == "[-*]")
+         {
+            $newResult .= "</ul>";
+            $index     += 3;
+            $level--;
+         }
+         // starting a numbered list.
+         else if ($tokenSmall == "[#-]")
+         {
+            $newResult .= "<ol class=\"lytStylePostBody\">";
+            $index     += 3;
+            $level++;
+         }
+         // ending a numbered list.
+         else if ($tokenSmall == "[-#]")
+         {
+            $newResult .= "</ol>";
+            $index     += 3;
+            $level--;
+         }
+         // starting a point in a bullet or numbered list.
+         else if ($tokenSmall == "[.-]")
+         {
+            $newResult .= "<li class=\"lytStylePostBody\">";
+            $index     += 3;
+            $level++;
+         }
+         // ending a point in a bullet or numbered list.
+         else if ($tokenSmall == "[-.]")
+         {
+            $newResult .= "</li>";
+            $index     += 3;
+            $level--;
+         }
+         // starting a code section.
+         else if ($tokenLarge == "[code-]")
+         {
+            $newResult .= "<p class=\"lytStylePostBodyCode\">";
+            $index     += 6;
+            $level++;
+         }
+         // ending a code section.
+         else if ($tokenLarge == "[-code]")
+         {
+            $newResult .= "</p>";
+            $index     += 6;
+            $level--;
+         }
+         // Unknown markup.
+         else
+         {
+            // Just dump the string verbatum.
+            $newResult .= $letter;
+         }
+
+         if ($level == 0)
+         {
+            $isInPara  = false;
+            $isNewPara = true;
+
+            // Skip whitespace
+            $index++;
+            for (; $index < $scount; $index++)
+            {
+               $letter = substr($result, $index, 1);
+               if ($letter == " "  ||
+                   $letter == "\t" ||
+                   $letter == "\n")
+               {
+                  continue;
+               }
+               break;
+            }
+            $index--;
+         }
+      }
+      // If the next letter is a new line...
+      else if ($letter == "\n" &&
+               $level  == 0)
+      {
+         // Check for multiple new lines...
+         $newLineCount = 1;
+         for ($newLineIndex = $index + 1; $newLineIndex < $scount; $newLineIndex++)
+         {
+            $nextLetter = substr($result, $newLineIndex, 1);
+
+            // Ignore whitespace.
+            if      ($nextLetter == " " ||
+                     $nextLetter == "\t")
+            {
+               continue;
+            }
+            // Next letter in another new line.
+            else if ($nextLetter == "\n")
+            {
+               $newLineCount++;
+            }
+            // Next letter is something completely different.
+            else
+            {
+               break;
+            }
+         }
+
+         // If new line count is more than 1 then we start a new paragraph.
+         if ($newLineCount > 1)
+         {
+            $isNewPara = true;
+            $index     = $newLineIndex - 1;
+         }
+         // Not a series.  Just dump the new line.
+         else
+         {
+            $newResult .= $letter;
+         }
+      }
+      // if the next letter is not a start of a paragraph style...
+      else
+      {
+         // First letter was not a special paragraph.
+         if ($index == 0)
+         {
+            $newResult .= "<p class=\"lytStylePostBody\">\n";
+            $isInPara   = true;
+         }
+
+         if ($isNewPara && 
+             $level == 0)
+         {
+            if ($isInPara)
+            {
+               $newResult .= "</p>";
+            }
+            $newResult .= "<p class=\"lytStylePostBody\">\n";
+            $isInPara   = true;
+            $isNewPara  = false;
+         }
+
+         $newResult .= $letter;
+      }
+   }
+
+   if ($isInPara)
+   {
+      $newResult .= "\n</p>";
+   }
+
+   return $newResult;
 }

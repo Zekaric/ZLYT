@@ -30,14 +30,14 @@ require_once "lyt_Constant.php";
 require_once "lyt_Config.php";
 require_once "lytLogin.php";
 
-$_pageTemplate                = "";
-$_pageTemplateColL            = "";
-$_pageTemplateColR            = "";
-$_pageTemplateLogin           = "";
-$_pageTemplateSectionCreate   = "";
-$_pageTemplateSectionListItem = "";
-$_pageTemplateSectionPost     = "";
-$_pageTemplateSectionPostNew  = "";
+$_pageTemplate                  = "";
+$_pageTemplateColL              = "";
+$_pageTemplateColR              = "";
+$_pageTemplateLogin             = "";
+$_pageTemplateSectionCreate     = "";
+$_pageTemplateSectionListItem   = "";
+$_pageTemplateSectionPost       = "";
+$_pageTemplateSectionPostCreate = "";
 
 ///////////////////////////////////////////////////////////////////////////////
 // global
@@ -76,6 +76,15 @@ function lytPageGetSectionCreateForm()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Get the section post create form.
+function lytPageGetSectionPostCreateForm()
+{
+   global $_pageTemplateSectionPostCreate;
+   
+   return $_pageTemplateSectionPostCreate;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Get the link to the admin page.
 function lytPageGetLinkAdmin()
 {
@@ -102,23 +111,23 @@ function lytPageGetLinkLogin()
 // Load in the page template file.
 function lytPageLoad()
 {
-   global $_pageTemplate               ;
-   global $_pageTemplateColL           ;
-   global $_pageTemplateColR           ;
-   global $_pageTemplateLogin          ;
-   global $_pageTemplateSectionCreate  ;
-   global $_pageTemplateSectionListItem;
-   global $_pageTemplateSectionPost    ;
-   global $_pageTemplateSectionPostNew ;
+   global $_pageTemplate                 ;
+   global $_pageTemplateColL             ;
+   global $_pageTemplateColR             ;
+   global $_pageTemplateLogin            ;
+   global $_pageTemplateSectionCreate    ;
+   global $_pageTemplateSectionListItem  ;
+   global $_pageTemplateSectionPost      ;
+   global $_pageTemplateSectionPostCreate;
    
-   $_pageTemplate                = zFileLoadText("lytTemplatePage.html",            false);
-   $_pageTemplateColL            = zFileLoadText("lytTemplateColL.html",            false);
-   $_pageTemplateColR            = zFileLoadText("lytTemplateColR.html",            false);
-   $_pageTemplateLogin           = zFileLoadText("lytTemplateLogin.html",           false);
-   $_pageTemplateSectionCreate   = zFileLoadText("lytTemplateSectionCreate.html",   false);
-   $_pageTemplateSectionListItem = zFileLoadText("lytTemplateSectionListItem.html", false);
-   $_pageTemplateSectionPost     = zFileLoadText("lytTemplateSectionPost.html",     false);
-   $_pageTemplateSectionPostNew  = zFileLoadText("lytTemplateSectionPostNew.html",  false);
+   $_pageTemplate                  = zFileLoadText("lytTemplatePage.html",              false);
+   $_pageTemplateColL              = zFileLoadText("lytTemplateColL.html",              false);
+   $_pageTemplateColR              = zFileLoadText("lytTemplateColR.html",              false);
+   $_pageTemplateLogin             = zFileLoadText("lytTemplateLogin.html",             false);
+   $_pageTemplateSectionCreate     = zFileLoadText("lytTemplateSectionCreate.html",     false);
+   $_pageTemplateSectionListItem   = zFileLoadText("lytTemplateSectionListItem.html",   false);
+   $_pageTemplateSectionPost       = zFileLoadText("lytTemplateSectionPost.html",       false);
+   $_pageTemplateSectionPostCreate = zFileLoadText("lytTemplateSectionPostCreate.html", false);
 
    return $_pageTemplate;
 }
@@ -127,7 +136,7 @@ function lytPageLoad()
 // Load in the admin page file.
 function lytPageLoadAdmin()
 {
-   return zFileLoadText("lytPageAdmin.html", false);
+   return zFileLoadText("lytTemplatePageAdmin.html", false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -157,19 +166,19 @@ function lytPageReplaceCommon($page)
 
    $page = _ReplaceSectionList($page);
 
-   $linkLogin = "<a href='" . lytPageGetLinkLogin() . "'>Login</a>";
+   $linkLogin = "<a href='" . lytPageGetLinkLogin() . "'>Login</a><br />";
    $linkAdmin = "";
    
    if (lytLoginIsUserAdmin())
    {
-      $linkLogin = "<a href='" . lytPageGetLinkLogin() . "'>Logout</a>";
-      $linkAdmin = "<a href='" . lytPageGetLinkAdmin() . "'>Admin</a>";
+      $linkLogin = "<a href='" . lytPageGetLinkLogin() . "'>Logout</a><br />";
+      $linkAdmin = "<a href='" . lytPageGetLinkAdmin() . "'>Admin</a><br />";
    }
 
    $page = str_replace("lytLinkLogin",    $linkLogin,                                     $page);
    $page = str_replace("lytLinkAdmin",    $linkAdmin,                                     $page);
    
-   $page = str_replace("lytSiteName",     $lytConfig[TAG_LYT_SITE_TITLE],                 $page);
+   $page = str_replace("lytSiteName",     $lytConfig[TAG_LYT_SITE_NAME],                  $page);
    $page = str_replace("lytSiteUrlSafe",  $lytConfig[TAG_LYT_SITE_URL_SAFE],              $page);
    $page = str_replace("lytSiteUrlPage",  lytGetSiteUrlPage(),                            $page);
    $page = str_replace("lytSiteUrl",      $lytConfig[TAG_LYT_SITE_URL],                   $page);
@@ -202,14 +211,13 @@ function _BuildSectionPostContent()
 {
    global $lytConfig;
    global $_pageTemplateSectionPost;
-   global $_pageTemplateSectionPostNew;
    
    $content = "";
 
    // Add the post form if admin is logged in.
    if (lytLoginIsUserAdmin())
    {
-      $content .= $_pageTemplateSectionPostNew;
+      $content .= "<a href=\"" . $lytConfig[TAG_LYT_SITE_URL_SAFE] . "/lyt.php?op=sectionPostCreate\">+ Post</a><br />\n";
    }
    
    // Ensure the posts are loaded.

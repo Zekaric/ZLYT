@@ -89,7 +89,8 @@ else if ($op == "sectionCreate")
 // Add a new post to the section
 else if ($op == "sectionPostCreate")
 {
-   lytSectionPostCreateProcess();
+   $isFormPage = true;
+   $page       = lytSectionPostCreatePage();
 }
 
 // If this is a form page then we have different behaviour.

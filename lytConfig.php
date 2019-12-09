@@ -84,7 +84,7 @@ function lytConfigStore()
       "\$lytConfig[TAG_LYT_ADMIN_LOGIN    ] = '" . $lytConfig[TAG_LYT_ADMIN_LOGIN   ] . "';\n" .
       "\$lytConfig[TAG_LYT_ADMIN_NAME     ] = '" . $lytConfig[TAG_LYT_ADMIN_NAME    ] . "';\n" .
       "\$lytConfig[TAG_LYT_ADMIN_PASSWORD ] = '" . $lytConfig[TAG_LYT_ADMIN_PASSWORD] . "';\n" .
-      "\$lytConfig[TAG_LYT_SITE_TITLE     ] = '" . $lytConfig[TAG_LYT_SITE_TITLE    ] . "';\n" .
+      "\$lytConfig[TAG_LYT_SITE_NAME      ] = '" . $lytConfig[TAG_LYT_SITE_NAME     ] . "';\n" .
       "\$lytConfig[TAG_LYT_SITE_URL       ] = '" . $lytConfig[TAG_LYT_SITE_URL      ] . "';\n" .
       "\$lytConfig[TAG_LYT_SITE_URL_SAFE  ] = '" . $lytConfig[TAG_LYT_SITE_URL_SAFE ] . "';\n";
 
