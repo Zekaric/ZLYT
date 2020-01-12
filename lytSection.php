@@ -216,7 +216,7 @@ function lytSectionPostGetBody($index)
       return "";
    }
    
-   return $lytSectionPostList[$index]["Body"];
+   return _ToSafeString($lytSectionPostList[$index]["Body"], false, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -245,7 +245,7 @@ function lytSectionPostGetTitle($index)
       return "";
    }
    
-   return $lytSectionPostList[$index]["Title"];
+   return _ToSafeString($lytSectionPostList[$index]["Title"], true, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +253,7 @@ function lytSectionPostGetTitle($index)
 function lytSectionPostStart()
 {
    $sectionIndex = lytLoginGetSection();
-   
+
    return _LoadPostFile($sectionIndex);
 }
 
@@ -275,9 +275,9 @@ function lytSectionPostCreateProcess()
    $index = count($lytSectionPostList);
 
    $lytSectionPostList[$index] = array(
-      "Title" => _ToSafeString($title, true),
+      "Title" => $title,
       "Date"  => $date,
-      "Body"  => _ToSafeString($body, false));
+      "Body"  => $body);
       
    _SectionPostStoreAppend();
 }
@@ -299,8 +299,7 @@ function _GetPostFile($sectionIndex)
 function _LoadPostFile($sectionIndex)
 {
    global $lytSectionList;
-   
-   $sectionIndex = lytLoginGetSection();
+   global $lytSectionPostList;
 
    if ($sectionIndex >= count($lytSectionList))
    {
@@ -340,39 +339,44 @@ function _SectionPostCreatePageLoad()
 
 ////////////////////////////////////////////////////////////////////////////////
 // Save the new section list.
-function _SectionStore()
-{
-   global $lytSectionList;
-
-   $str =
-      "<?php\n" .
-      "\$lytSectionList = array();\n\n";
-   
-   for ($index = 0; $index < count($lytSectionList); $index++)
-   {
-      $str .= "\$lytSectionList[" . $index ."] = array(" . 
-         "\"Name\" => \"" . $lytSectionList[$index]["Name"] . "\", " .
-         "\"Key\"  => \"" . $lytSectionList[$index]["Key"]  . "\", " .
-         "\"Dir\"  => \"" . $lytSectionList[$index]["Dir"]  . "\");\n";
-   }
-   
-   zFileStoreText(LYT_FILE_NAME_SECTION, $str, true);
-}
+//function _SectionStore()
+//{
+//   global $lytSectionList;
+//
+//   $str =
+//      "<?php\n" .
+//      "\$lytSectionList = array();\n\n";
+//   
+//   for ($index = 0; $index < count($lytSectionList); $index++)
+//   {
+//      $str .= "\$lytSectionList[" . $index ."] = array(" . 
+//         "\"Name\" => \"" . $lytSectionList[$index]["Name"] . "\", " .
+//         "\"Key\"  => \"" . $lytSectionList[$index]["Key"]  . "\", " .
+//         "\"Dir\"  => \"" . $lytSectionList[$index]["Dir"]  . "\");\n";
+//   }
+//   
+//   zFileStoreText(LYT_FILE_NAME_SECTION, $str, true);
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-// Save the new section list.
+// Add a new section to the section list.
 function _SectionStoreAppend()
 {
    global $lytSectionList;
 
    $index = count($lytSectionList) - 1;
 
-   $str .= "\$lytSectionList[" . $index ."] = array(" . 
+   $str = "\$lytSectionList[" . $index ."] = array(" . 
       "\"Name\" => \"" . $lytSectionList[$index]["Name"] . "\", " .
       "\"Key\"  => \"" . $lytSectionList[$index]["Key"]  . "\", " .
       "\"Dir\"  => \"" . $lytSectionList[$index]["Dir"]  . "\");\n";
    
    zFileAppendText(LYT_FILE_NAME_SECTION, $str, true);
+
+   // Create the section post file
+   $str = "<?php\n";
+
+   zFileStoreText(_GetPostFile($index), $str, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -388,8 +392,8 @@ function _SectionPostStoreAppend()
    $str = "\$lytSectionPostList[" . $index . "] = array(" .
       "\"Title\" => \"" . $lytSectionPostList[$index]["Title"] . "\", " .
       "\"Date\"  => \"" . $lytSectionPostList[$index]["Date"]  . "\", " .
-      "\"Body\"  => <<<END\n" .
-      $lytSectionPostList[$index]["Body"]  . "\nEND\n);\n";
+      "\"Body\"  => <<<ZLYTEND\n" .
+      $lytSectionPostList[$index]["Body"]  . "\nZLYTEND\n);\n";
    
    zFileAppendText(_GetPostFile($sectionIndex), $str, true);
 }
@@ -397,13 +401,12 @@ function _SectionPostStoreAppend()
 ////////////////////////////////////////////////////////////////////////////////
 // Convert a generic string to a PHP and Html Safe string.
 // Convert the paragraphing to html
-function _ToSafeString($string, $isTitle)
+function _ToSafeString($string, $isTitle, $isPost)
 {
    $result = str_replace("\"",       "&quot;",    $string);
    $result = str_replace("\'",       "&apos;",    $result);
    $result = str_replace("\$",       "&#36;",     $result);
    $result = str_replace("\\",       "&#92;",     $result);
-   $result = str_replace("/",        "&#47;",     $result);
    $result = str_replace("<",        "&lt;",      $result);
    $result = str_replace(">",        "&gt;",      $result);
    $result = str_replace("[-]",      "&nbsp;",    $result);
@@ -427,11 +430,24 @@ function _ToSafeString($string, $isTitle)
    $result = str_replace("\r",       "",          $result);
    if ($isTitle)
    {
-      $result = str_replace(" ",        "&nbsp;",   $result);
+      $result = str_replace(" ", "&nbsp;", $result);
    }
 
    $result = str_replace("[img-]",   "<img src=\"lytImage/", $result);
    $result = str_replace("[-img]",   "\"/>",                 $result);
+
+   // Comments can't embed links
+   if ($isPost)
+   {
+      $result = str_replace("[link-]",  "<a href=\"", $result);
+      $result = str_replace("[-link-]", "\">",        $result);
+      $result = str_replace("[-link]",  "</a>",       $result);
+   }
+   else
+   {
+      // Convert back slashes if part of a comment.
+	   $result = str_replace("/", "&#47;", $result);
+   }
 
    // Get rid of leading and trailing whitespace;
    $result = trim($result);

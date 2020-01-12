@@ -88,5 +88,5 @@ function lytConfigStore()
       "\$lytConfig[TAG_LYT_SITE_URL       ] = '" . $lytConfig[TAG_LYT_SITE_URL      ] . "';\n" .
       "\$lytConfig[TAG_LYT_SITE_URL_SAFE  ] = '" . $lytConfig[TAG_LYT_SITE_URL_SAFE ] . "';\n";
 
-   zFileStoreText(LYT_CONFIG_FILE_NAME, $lytConfigFileContent, true);
+   zFileStoreText(LYT_FILE_NAME_CONFIG, $lytConfigFileContent, true);
 }

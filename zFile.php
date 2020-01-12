@@ -36,8 +36,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ******************************************************************************/
 
-define("FILE_DEBUGGING_IS_ON", false);
-
 ////////////////////////////////////////////////////////////////////////////////
 // Include
 require_once "zDebug.php";
@@ -94,7 +92,6 @@ function zFileConnect($file, $mode, $isLocking)
       $fileCon["lock"] = zLockCreateFile($file);
       if ($fileCon["lock"] == "")
       {
-         if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fileCon);
          return $fileCon;
       }
    }
@@ -112,7 +109,6 @@ function zFileConnect($file, $mode, $isLocking)
       $fileCon["file"] = false;
    }
    
-   if (FILE_DEBUGGING_IS_ON) zDebugPrintArray($fileCon);
    return $fileCon;
 }
 
